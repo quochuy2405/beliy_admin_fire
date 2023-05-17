@@ -10,7 +10,7 @@ export default function Layout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning={true}>
-        <SnackbarProvider>
+        <SnackbarProvider autoHideDuration={4000}>
           <AdminLayout>{children}</AdminLayout>
         </SnackbarProvider>
       </body>
