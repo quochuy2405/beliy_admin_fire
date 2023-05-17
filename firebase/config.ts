@@ -1,6 +1,7 @@
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCrVC4qMogDlwnYlRWL2Ajzxg0AmuY9FNg',
@@ -11,14 +12,13 @@ const firebaseConfig = {
   appId: '1:688011164935:web:6d6a59eba7b6781e5059a2',
   measurementId: 'G-H4ML234RQD'
 }
-// Use this to initialize the firebase App
-const firebaseApp = firebase.initializeApp(firebaseConfig)
 
-const storage = firebase.storage()
-const storageRef = storage.ref()
 // Use these for db & auth
-const db = firebaseApp.firestore()
-const auth = firebase.auth()
+const app = initializeApp(firebaseConfig)
 
-export { auth, db, storageRef }
-export default firebase
+// Get the Firestore and Auth instances
+const db = getFirestore()
+const auth = getAuth()
+const storage = getStorage(app)
+export { auth, db, storage }
+export default app
