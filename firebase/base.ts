@@ -1,4 +1,14 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from 'firebase/firestore'
 import { ref, uploadBytes } from 'firebase/storage'
 import { db, storage } from './config'
 
@@ -17,7 +27,16 @@ const read = async (collectionName: string, id: string) => {
     return null
   }
 }
-
+// Find all documents in a collection that match a specific condition
+const findAll = async (collectionName: string, conditionKey: string, conditionValue: any) => {
+  const q = query(collection(db, collectionName), where(conditionKey, '==', conditionValue))
+  const querySnapshot = await getDocs(q)
+  const docs = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data()
+  }))
+  return docs
+}
 // Read all documents in a collection
 const readAll = async (collectionRef: any) => {
   const querySnapshot = await getDocs(collectionRef)
@@ -44,4 +63,4 @@ const addImage = async (file: File, path: string): Promise<string> => {
   return snapshot.metadata.fullPath
 }
 
-export { create, deleteItem, read, readAll, update, addImage }
+export { create, deleteItem, read, readAll, update, addImage, findAll }
