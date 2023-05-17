@@ -3,13 +3,13 @@ import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDwgEs7rqwWC8njqQSjuwnQH8WRmih7au0',
-  authDomain: 'ftisuvn.firebaseapp.com',
-  projectId: 'ftisuvn',
-  storageBucket: 'ftisuvn.appspot.com',
-  messagingSenderId: '408809929198',
-  appId: '1:408809929198:web:608c4fc7367f48116a76ff',
-  measurementId: 'G-W1387ZD42P'
+  apiKey: 'AIzaSyCrVC4qMogDlwnYlRWL2Ajzxg0AmuY9FNg',
+  authDomain: 'beliystoreadmin.firebaseapp.com',
+  projectId: 'beliystoreadmin',
+  storageBucket: 'beliystoreadmin.appspot.com',
+  messagingSenderId: '688011164935',
+  appId: '1:688011164935:web:6d6a59eba7b6781e5059a2',
+  measurementId: 'G-H4ML234RQD'
 }
 // Use this to initialize the firebase App
 const firebaseApp = firebase.initializeApp(firebaseConfig)
