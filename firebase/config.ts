@@ -14,9 +14,11 @@ const firebaseConfig = {
 // Use this to initialize the firebase App
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 
+const storage = firebase.storage()
+const storageRef = storage.ref()
 // Use these for db & auth
 const db = firebaseApp.firestore()
 const auth = firebase.auth()
 
-export { auth, db }
+export { auth, db, storageRef }
 export default firebase

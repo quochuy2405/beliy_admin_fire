@@ -1,4 +1,4 @@
-import { db } from './config'
+import { db, storageRef } from './config'
 
 // Create a new document
 const create = async (collection, data) => {
@@ -36,4 +36,18 @@ const deleteDoc = async (collection, id) => {
   await db.collection(collection).doc(id).delete()
 }
 
-export { create, deleteDoc, read, readAll, update }
+// Upload a file to Firebase Storage
+const uploadImage = async (file, folderName, fileName) => {
+  // Create a new storage location for the file
+  const fileRef = storageRef.child(`${folderName}/${fileName}`)
+
+  // Upload the file to the storage location
+  const snapshot = await fileRef.put(file)
+
+  // Get the download URL for the file
+  const downloadURL = await snapshot.ref.getDownloadURL()
+
+  // Return the download URL
+  return downloadURL
+}
+export { create, deleteDoc, read, readAll, update, uploadImage }
