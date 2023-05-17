@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Controller, UseFormReturn } from 'react-hook-form'
+import { MdAddCircle } from 'react-icons/md'
 import { TextField } from '../atoms'
 import { Modal } from '../moleculers'
 const tabs = [
@@ -25,11 +26,17 @@ const tabs = [
     name: 'Quần'
   }
 ]
+const catDetails = {
+  Q: 'Quần',
+  AK: 'Áo Khoác',
+  AT: 'Áo Thun'
+}
 interface ProductProps {
   stateStore: UseFormReturn<any, any>
   createForm: UseFormReturn<ProductType, any>
   editForm: UseFormReturn<ProductType, any>
   addProduct: (data: ProductType) => void
+  editProduct: (data: ProductType) => void
   previewImageNew: (data: FileList) => void
 }
 const Product: React.FC<ProductProps> = ({
@@ -37,6 +44,7 @@ const Product: React.FC<ProductProps> = ({
   editForm,
   stateStore,
   addProduct,
+  editProduct,
   previewImageNew
 }) => {
   const tab = useSearchParams().get('tab')
@@ -57,9 +65,9 @@ const Product: React.FC<ProductProps> = ({
             isOpen={field.value}
             title="Chỉnh sửa sản phẩm"
           >
-            <form className="space-y-6 h-full" onSubmit={editForm.handleSubmit(addProduct)}>
-              <div className="flex">
-                <div className="w-1/2 p-4 !h-[300px] relative">
+            <form className="space-y-6 h-full" onSubmit={editForm.handleSubmit(editProduct)}>
+              <div className="flex flex-col md:flex-row">
+                <div className="w-full md:w-1/2 p-4 !h-[300px] relative">
                   <label
                     htmlFor="dropzone-file"
                     className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 "
@@ -67,7 +75,7 @@ const Product: React.FC<ProductProps> = ({
                     <Controller
                       name="imageNewPreview"
                       control={stateStore.control}
-                      defaultValue={undefined}
+                      defaultValue=""
                       render={({ field }) => {
                         return (
                           <>
@@ -240,7 +248,7 @@ const Product: React.FC<ProductProps> = ({
                     <Controller
                       name="price"
                       control={editForm.control}
-                      defaultValue={undefined}
+                      defaultValue={0}
                       render={({ field, fieldState }) => (
                         <TextField
                           title="Giá sản phẩm"
@@ -255,7 +263,7 @@ const Product: React.FC<ProductProps> = ({
                     <Controller
                       name="category"
                       control={editForm.control}
-                      defaultValue={undefined}
+                      defaultValue=""
                       render={({ field }) => (
                         <>
                           <label
@@ -268,9 +276,9 @@ const Product: React.FC<ProductProps> = ({
                             {...field}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           >
-                            <option selected>Chọn loại</option>
+                            <option value="">Chọn loại</option>
                             <option value="AT">Áo Thun</option>
-                            <option value="AK">Áo khác</option>
+                            <option value="AK">Áo khoác</option>
                             <option value="Q">Quần</option>
                           </select>
                         </>
@@ -326,8 +334,8 @@ const Product: React.FC<ProductProps> = ({
                 title="Tạo sản phẩm"
               >
                 <form className="space-y-6 h-full" onSubmit={createForm.handleSubmit(addProduct)}>
-                  <div className="flex">
-                    <div className="w-1/2 p-4 !h-[300px] relative">
+                  <div className="flex flex-col md:flex-row">
+                    <div className="w-full md:w-1/2 p-4 !h-[300px] relative ">
                       <label
                         htmlFor="dropzone-file"
                         className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 "
@@ -341,12 +349,12 @@ const Product: React.FC<ProductProps> = ({
                               <div>
                                 {field.value ? (
                                   <Image
-                                    src={field.value}
-                                    alt=""
+                                    src={field.value || 'https://www.freeiconspng.com/img/23494'}
                                     unoptimized
-                                    width={100}
+                                    width={10}
                                     height={100}
-                                    className="h-full w-full object-contain"
+                                    alt=""
+                                    className="w-full h-full object-cover"
                                   />
                                 ) : (
                                   <div className="flex flex-col items-center justify-center">
@@ -408,12 +416,15 @@ const Product: React.FC<ProductProps> = ({
                           name="imageName"
                           defaultValue=""
                           control={createForm.control}
-                          render={({ field, fieldState }) => (
+                          render={({ field: { value, name }, fieldState }) => (
                             <TextField
+                              name={name}
                               title="Mã hình ảnh"
-                              {...field}
+                              value={value}
                               errors={fieldState.error}
+                              disabled
                               required
+                              readOnly
                             />
                           )}
                         />
@@ -536,9 +547,9 @@ const Product: React.FC<ProductProps> = ({
                                 {...field}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                               >
-                                <option selected>Chọn loại</option>
+                                <option value="">Chọn loại</option>
                                 <option value="AT">Áo Thun</option>
-                                <option value="AK">Áo khác</option>
+                                <option value="AK">Áo khoác</option>
                                 <option value="Q">Quần</option>
                               </select>
                             </div>
@@ -562,10 +573,13 @@ const Product: React.FC<ProductProps> = ({
 
           <button
             type="button"
-            className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+            className="w-fit inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
             onClick={() => stateStore.setValue('isNew', true)}
           >
-            Tạo sản phẩm
+            <label className="hidden md:block"> Tạo sản phẩm</label>
+            <label className="block md:hidden">
+              <MdAddCircle size={20} />
+            </label>
           </button>
         </div>
       </div>
@@ -580,49 +594,106 @@ const Product: React.FC<ProductProps> = ({
                 {field.value.map((item) => (
                   <div
                     key={item}
-                    className="w-full bg-white rounded-lg h-82 flex flex-col p-4 gap-2 m-auto"
+                    className="w-[90%] md:w-full bg-white rounded-lg h-82 flex flex-col p-4 gap-2 m-auto"
                   >
-                    <div className="w-full h-[55%]">
+                    <div className="w-full h-[300px] md:h-[55%] ">
                       <Image
                         src={item.imageURL || 'https://www.freeiconspng.com/img/23494'}
                         unoptimized
                         width={10}
                         height={100}
                         alt=""
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain md:object-cover"
                       />
                     </div>
-                    <p className="w-fit p-2 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
-                      {item.name}
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="w-fit p-2 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
+                        {item.name}
+                      </p>
+                      <p className="w-fit p-2 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
+                        Thể loại: {catDetails[item.category]}
+                      </p>
+                    </div>
 
                     <div className="w-full text-white text-sm flex-1 flex items-center justify-between">
                       <p className="text-white bg-red-600 font-medium rounded-lg text-xs px-4 py-2">
                         Giá: {Number(item.price)?.toLocaleString()}
                       </p>
-                      <div className="flex">
-                        <p className="w-6 h-6 rounded-full border-2 bg-red-500" />
-                        <p className="w-6 h-6 rounded-full border-2 bg-black" />
-                        <p className="w-6 h-6 rounded-full border-2 bg-blue-500" />
-                        <p className="w-6 h-6 rounded-full border-2 bg-green-500" />
+                      <div className="flex gap-1">
+                        <p
+                          className={clsx('w-6 h-6 rounded-full border-2 bg-red-500', {
+                            'border-black': item.color === 'red'
+                          })}
+                        />
+                        <p
+                          className={clsx('w-6 h-6 rounded-full border-2 bg-blue-500', {
+                            'border-black': item.color === 'blue'
+                          })}
+                        />
+                        <p
+                          className={clsx('w-6 h-6 rounded-full border-2 bg-green-500', {
+                            'border-black': item.color === 'green'
+                          })}
+                        />
+                        <p
+                          className={clsx('w-6 h-6 rounded-full border-2 bg-black-500', {
+                            'border-black': item.color === 'black'
+                          })}
+                        />
                       </div>
                     </div>
                     <div className="w-full text-white text-sm flex-1 flex items-center justify-between">
                       <div className="flex gap-1">
-                        <p className="w-7 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
+                        <p
+                          className={clsx(
+                            'w-7 h-7 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-xs',
+                            {
+                              'border-blue-500': item.size === 'S'
+                            }
+                          )}
+                        >
                           S
                         </p>
-                        <p className="w-7 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
+                        <p
+                          className={clsx(
+                            'w-7 h-7 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-xs',
+                            {
+                              'border-blue-500': item.size === 'M'
+                            }
+                          )}
+                        >
                           M
                         </p>
-                        <p className="w-7 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
+                        <p
+                          className={clsx(
+                            'w-7 h-7 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-xs',
+                            {
+                              'border-blue-500': item.size === 'L'
+                            }
+                          )}
+                        >
                           L
                         </p>
                       </div>
                       <button
                         type="button"
                         className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-                        onClick={() => stateStore.setValue('isEdit', true)}
+                        onClick={() => {
+                          stateStore.setValue('isEdit', true)
+                          const names: Array<keyof ProductType> = [
+                            'category',
+                            'color',
+                            'name',
+                            'imageName',
+                            'price',
+                            'size',
+                            'id'
+                          ]
+                          names.forEach((name) => {
+                            editForm.setValue(name, item[name])
+                          })
+                          stateStore.setValue('imageNewPreview', item['imageURL'])
+                        }}
                       >
                         Chỉnh sửa
                       </button>

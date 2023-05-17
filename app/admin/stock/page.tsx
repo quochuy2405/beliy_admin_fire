@@ -15,8 +15,7 @@ const StockPage = () => {
   const stateStore = useForm({
     defaultValues: {
       stocks: [],
-      isEdit: false,
-      itemSelected: undefined
+      isEdit: false
     }
   })
   const editForm = useForm<StockType>()
@@ -26,8 +25,7 @@ const StockPage = () => {
     update(stockRef, id, { quantity })
       .then(() => {
         enqueueSnackbar('Cập nhật kho thành công', { variant: 'success' })
-        stateStore.resetField('itemSelected')
-        stateStore.resetField('isEdit')
+        stateStore.reset()
         setRefresh((cur) => !cur)
       })
       .catch(() => {
@@ -37,7 +35,6 @@ const StockPage = () => {
   useEffect(() => {
     const stockRef = collection(db, 'stocks')
     readAll(stockRef).then(async (res) => {
-      console.log(res)
       const stocks = res.map(async (item) => {
         const imageRef = ref(
           storage,
@@ -50,7 +47,7 @@ const StockPage = () => {
               .replace(/\s/g, '_')
         )
         const imageURL = await getDownloadURL(imageRef)
-        console.log(imageURL, item.imageName)
+
         return {
           id: item.id,
           quantity: item.quantity,

@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { Modal } from '../moleculers'
+import { MdAddCircle } from 'react-icons/md'
 const Discount = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isAddNew, setIsAddNew] = useState(false)
@@ -145,10 +146,13 @@ const Discount = () => {
         </div>
         <button
           type="button"
-          className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-          onClick={() => setIsAddNew(true)}
+          className="w-fit inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+          // onClick={() => stateStore.setValue('isNew', true)}
         >
-          Tạo mới khuyễn mãi
+          <label className="hidden md:block"> Tạo khuyến mãi phẩm</label>
+          <label className="block md:hidden">
+            <MdAddCircle size={20} />
+          </label>
         </button>
       </div>
       <div className="flex-1 w-full rounded-lg overflow-y-auto pb-12">

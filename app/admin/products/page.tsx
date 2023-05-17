@@ -1,6 +1,6 @@
 'use client'
 import { Product } from '@/components/templates'
-import { addImage, create, readAll } from '@/firebase/base'
+import { addImage, create, readAll, update } from '@/firebase/base'
 import { db, storage } from '@/firebase/config'
 import { ProductType } from '@/types/product'
 import { collection } from 'firebase/firestore'
@@ -66,7 +66,7 @@ const ProductPage = () => {
           )
           enqueueSnackbar('Thêm sản phẩm thành công', { variant: 'success' })
           createForm.reset()
-          stateStore.resetField('imageNewPreview')
+          stateStore.reset()
 
           const stocksRef = collection(db, 'stocks')
           await create(stocksRef, {
@@ -84,6 +84,20 @@ const ProductPage = () => {
       })
   }
 
+  const editProduct = (data: ProductType) => {
+    const { category, color, name, price, size, id } = data
+    console.log(category, color, name, price, size, id)
+    const productRef = collection(db, 'products')
+    update(productRef, id, { category, color, name, price, size })
+      .then(() => {
+        enqueueSnackbar('Cập nhật thành công', { variant: 'success' })
+        stateStore.reset()
+        setRefresh((cur) => !cur)
+      })
+      .catch(() => {
+        enqueueSnackbar('Cập nhật thất bại', { variant: 'error' })
+      })
+  }
   const previewImageNew = (files: FileList) => {
     const file = files[0]
     if (file) {
@@ -111,7 +125,6 @@ const ProductPage = () => {
               .replace(/\s/g, '_')
         )
         const imageURL = await getDownloadURL(imageRef)
-        console.log(imageURL, item.imageName)
         return {
           ...item,
           imageURL
@@ -126,6 +139,7 @@ const ProductPage = () => {
     createForm,
     editForm,
     addProduct,
+    editProduct,
     previewImageNew
   }
   return <Product {...props} />
