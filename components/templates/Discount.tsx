@@ -29,7 +29,10 @@ const Discount = () => {
           </div>
 
           <div>
-            <label htmlFor="text" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <label
+              htmlFor="text"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
               Hạn sử dụng
             </label>
             <input
@@ -41,7 +44,10 @@ const Discount = () => {
             />
           </div>
           <div>
-            <label htmlFor="text" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <label
+              htmlFor="text"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
               Phân trăm giảm giá
             </label>
             <input
@@ -89,14 +95,19 @@ const Discount = () => {
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                       <span className="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      SVG, PNG, JPG or GIF (MAX. 800x400px)
+                    </p>
                   </div>
                   <input id="dropzone-file" type="file" className="hidden" />
                 </label>
               </div>
 
               <div>
-                <label htmlFor="text" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label
+                  htmlFor="text"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Hạn sử dụng
                 </label>
                 <input
@@ -108,7 +119,10 @@ const Discount = () => {
                 />
               </div>
               <div>
-                <label htmlFor="text" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label
+                  htmlFor="text"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Phân trăm giảm giá
                 </label>
                 <input
@@ -140,7 +154,10 @@ const Discount = () => {
       <div className="flex-1 w-full rounded-lg overflow-y-auto pb-12">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
           {[1, 2, 3, 4, 5].map((item) => (
-            <div key={item} className="w-full bg-white rounded-lg h-fit flex flex-col p-4 gap-2 m-auto">
+            <div
+              key={item}
+              className="w-full bg-white rounded-lg h-fit flex flex-col p-4 gap-2 m-auto"
+            >
               <div className="w-full h-[65%]">
                 <Image
                   src="https://bizweb.dktcdn.net/100/287/440/products/ao-khoac-local-brand-dep-nhieu-mau-form-rong-dep-5.jpg?v=1662543061970"

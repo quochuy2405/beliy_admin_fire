@@ -48,7 +48,9 @@ const Modal = ({ isOpen, handleClose, children, title, size = '3xl' }) => {
             <span className="sr-only">Close modal</span>
           </button>
           <div className="px-6 py-6 lg:px-8">
-            <h3 className="mb-4 text-xl font-semibold uppercase text-center text-gray-900 dark:text-white">{title}</h3>
+            <h3 className="mb-4 text-xl font-semibold uppercase text-center text-gray-900 dark:text-white">
+              {title}
+            </h3>
             {children}
           </div>
         </div>

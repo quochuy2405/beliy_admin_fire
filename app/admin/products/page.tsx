@@ -1,10 +1,11 @@
 'use client'
 import { Product } from '@/components/templates'
 import { addImage, create } from '@/firebase/base'
+import { db } from '@/firebase/config'
 import { ProductType } from '@/types/product'
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import { collection } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
+import { useForm } from 'react-hook-form'
 
 const ProductPage = () => {
   const { enqueueSnackbar } = useSnackbar()
@@ -21,17 +22,31 @@ const ProductPage = () => {
 
   const addProduct = async (data: ProductType) => {
     const newImage = stateStore.getValues('fileImageNew')
-    if (newImage) {
-      // If a new image is selected, upload it to the storage
-      const imageURL = await addImage(newImage, 'products/jacket')
-      console.log(imageURL)
-    }
     // Create or update the product data
-    create('products', data)
-      .then(() => {
+    if (!newImage) {
+      enqueueSnackbar('Hãy chọn ảnh sản phẩm', { variant: 'error' })
+      return
+    }
+
+    const productsRef = collection(db, 'products')
+    await create(productsRef, data)
+      .then(async () => {
         enqueueSnackbar('Thêm sản phẩm thành công', { variant: 'success' })
+        if (newImage) {
+          // If a new image is selected, upload it to the storage
+          await addImage(
+            newImage,
+            'products/' +
+              data.name
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLocaleLowerCase()
+                .replace(/\s/g, '_')
+          )
+        }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error)
         enqueueSnackbar('Thêm sản phẩm lỗi', { variant: 'error' })
       })
   }

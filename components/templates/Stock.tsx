@@ -44,7 +44,10 @@ const Stock = () => {
             />
           </div>
           <div>
-            <label htmlFor="number" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <label
+              htmlFor="number"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
               Số lượng tồn kho
             </label>
             <input
@@ -73,7 +76,8 @@ const Stock = () => {
                 <Link
                   href={`/admin/stock?tab=${item.key}`}
                   className={clsx('inline-block p-4  rounded-t-l', {
-                    'active text-blue-600 border-b-2 border-blue-600': tab === item.key || (!tab && item.key === 'all')
+                    'active text-blue-600 border-b-2 border-blue-600':
+                      tab === item.key || (!tab && item.key === 'all')
                   })}
                 >
                   {item.name}
@@ -86,7 +90,10 @@ const Stock = () => {
       <div className="flex-1 w-full rounded-lg overflow-y-auto pb-12">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {[1, 2, 3, 4, 5].map((item) => (
-            <div key={item} className="w-full bg-white rounded-lg h-72 flex flex-col p-4 gap-2 m-auto">
+            <div
+              key={item}
+              className="w-full bg-white rounded-lg h-72 flex flex-col p-4 gap-2 m-auto"
+            >
               <div className="w-full h-[85%]">
                 <Image
                   src="https://bizweb.dktcdn.net/100/287/440/products/ao-khoac-local-brand-dep-nhieu-mau-form-rong-dep-5.jpg?v=1662543061970"
@@ -99,7 +106,9 @@ const Stock = () => {
               </div>
 
               <div className="w-full text-white text-sm flex-1 flex items-center justify-between">
-                <p class="text-white bg-red-600 font-medium rounded-lg text-xs px-4 py-2.5">Số lượng: 100</p>
+                <p class="text-white bg-red-600 font-medium rounded-lg text-xs px-4 py-2.5">
+                  Số lượng: 100
+                </p>
                 <button
                   type="button"
                   class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"

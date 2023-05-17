@@ -5,34 +5,49 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { FaMoneyCheckAlt } from 'react-icons/fa'
 import { GiClothes } from 'react-icons/gi'
-import { MdInventory, MdOutlineLocalActivity, MdPersonSearch, MdSupervisorAccount } from 'react-icons/md'
+import {
+  MdInventory,
+  MdOutlineLocalActivity,
+  MdPersonSearch,
+  MdSupervisorAccount
+} from 'react-icons/md'
 
 import { RiBillFill } from 'react-icons/ri'
 import { HiHome } from 'react-icons/hi'
 const USERS = [
   {
     key: '/admin/stock',
-    icon: (active) => <MdInventory size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />,
+    icon: (active) => (
+      <MdInventory size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
     title: 'Quản lý kho hàng'
   },
   {
     key: '/admin/products',
-    icon: (active) => <GiClothes size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />,
+    icon: (active) => (
+      <GiClothes size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
     title: 'Quản lý sản phẩm'
   },
   {
     key: '/admin/account_managers',
-    icon: (active) => <MdSupervisorAccount size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />,
+    icon: (active) => (
+      <MdSupervisorAccount size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
     title: 'Quản lý tài khoản'
   },
   {
     key: '/admin/invoice_managers',
-    icon: (active) => <RiBillFill size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />,
+    icon: (active) => (
+      <RiBillFill size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
     title: 'Quản lý đơn hàng'
   },
   {
     key: '/admin/employee_managers',
-    icon: (active) => <MdPersonSearch size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />,
+    icon: (active) => (
+      <MdPersonSearch size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
     title: 'Quản lý nhân viên'
   }
 ]
@@ -40,12 +55,16 @@ const USERS = [
 const POCS = [
   {
     key: '/admin/revenue',
-    icon: (active) => <FaMoneyCheckAlt size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />,
+    icon: (active) => (
+      <FaMoneyCheckAlt size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
     title: 'Thông kê công nợ'
   },
   {
     key: '/admin/discount',
-    icon: (active) => <MdOutlineLocalActivity size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />,
+    icon: (active) => (
+      <MdOutlineLocalActivity size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
     title: 'Quản lý ưu đãi, marketing'
   }
 ]
@@ -98,7 +117,12 @@ const AdminLayout = ({ children }) => {
                 aria-label="Notifications"
                 aria-haspopup="true"
               >
-                <svg className="w-5 h-5 m-auto block" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  className="w-5 h-5 m-auto block"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
                 </svg>
                 {/* <!-- Notification badge --> */}
@@ -150,7 +174,11 @@ const AdminLayout = ({ children }) => {
                     href="/admin"
                     passHref
                   >
-                    <HiHome size={20} color={pathname === '/admin' ? 'orange' : 'black'} className="w-5 h-5" />
+                    <HiHome
+                      size={20}
+                      color={pathname === '/admin' ? 'orange' : 'black'}
+                      className="w-5 h-5"
+                    />
                     <span className="ml-2">Trang chủ</span>
                   </Link>
                 </li>
@@ -176,7 +204,9 @@ const AdminLayout = ({ children }) => {
                 ))}
               </ul>
               <ul className="pb-4 flex flex-col gap-0.5">
-                <li className="relative py-1 px-2 text-sm font-bold text-gray-default">QUẢN LÝ KHÁC</li>
+                <li className="relative py-1 px-2 text-sm font-bold text-gray-default">
+                  QUẢN LÝ KHÁC
+                </li>
                 {POCS.map((item) => (
                   <li className="relative py" key={item.key}>
                     <Link

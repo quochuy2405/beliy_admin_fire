@@ -1,5 +1,11 @@
 'use client'
-import { ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from '@tanstack/react-table'
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable
+} from '@tanstack/react-table'
 import clsx from 'clsx'
 import { memo } from 'react'
 
@@ -50,7 +56,10 @@ const Table: React.FC<TableProps> = ({ data, columns, className }) => {
             <tr key={row.id} className="hover:bg-gray-100 cursor-pointer">
               {row.getVisibleCells().map((cell) => {
                 return (
-                  <td className="first:pl-6 last:pr-6 h-16 pl-1 font-medium text-sm text-black" key={cell.id}>
+                  <td
+                    className="first:pl-6 last:pr-6 h-16 pl-1 font-medium text-sm text-black"
+                    key={cell.id}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 )
@@ -60,7 +69,10 @@ const Table: React.FC<TableProps> = ({ data, columns, className }) => {
         })}
         {!table?.getRowModel().rows?.length && (
           <tr>
-            <td colSpan={table.getHeaderGroups()[0].headers.length} className="px-6 py-3 h-full text-center">
+            <td
+              colSpan={table.getHeaderGroups()[0].headers.length}
+              className="px-6 py-3 h-full text-center"
+            >
               Chưa có dữ liệu
             </td>
           </tr>

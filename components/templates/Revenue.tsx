@@ -13,7 +13,16 @@ import {
 import { Line } from 'react-chartjs-2'
 import { Doughnut } from 'react-chartjs-2'
 
-ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
 export const options = {
   responsive: true,
   plugins: {
@@ -79,7 +88,9 @@ const Revenue = () => {
               <Line options={options} data={data} />
             </div>
             <div className=" w-full md:w-[48.5%] p-1 flex flex-col md:p-2 bg-white rounded-lg">
-              <h2 className="font-bold text-sm bg-blue-600 text-white w-fit rounded-lg p-2">TỔNG ĐƠN HÀNG</h2>
+              <h2 className="font-bold text-sm bg-blue-600 text-white w-fit rounded-lg p-2">
+                TỔNG ĐƠN HÀNG
+              </h2>
               <div className="flex-1 w-full flex items-center justify-center">
                 <div className="w-28 h-28 m-auto rounded-full flex items-center justify-center p-2 border-2 border-blue-500 text-blue-500 font-bold text-lg">
                   1000
@@ -87,7 +98,9 @@ const Revenue = () => {
               </div>
             </div>
             <div className=" w-full md:w-[48.5%] p-1 flex flex-col md:p-2 bg-white rounded-lg">
-              <h2 className="font-bold text-sm bg-red-500 text-white w-fit rounded-lg p-2">TỔNG DOANH THU</h2>
+              <h2 className="font-bold text-sm bg-red-500 text-white w-fit rounded-lg p-2">
+                TỔNG DOANH THU
+              </h2>
               <div className="flex-1 w-full flex items-center justify-center">
                 <div className="w-28 h-28 m-auto rounded-full flex items-center justify-center p-2 border-2 border-red-500 text-red-500 font-bold text-lg">
                   1000

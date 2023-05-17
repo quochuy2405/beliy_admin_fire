@@ -31,13 +31,18 @@ const Login = ({ methods, handleSubmit }) => {
                         placeholder="example@gmail.com"
                         required
                       />
-                      <small className="text-red-400 text-xs">{fieldState?.error && fieldState.error.message}</small>
+                      <small className="text-red-400 text-xs">
+                        {fieldState?.error && fieldState.error.message}
+                      </small>
                     </>
                   )}
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Password
                 </label>
                 <Controller
@@ -54,7 +59,9 @@ const Login = ({ methods, handleSubmit }) => {
                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                         required
                       />
-                      <small className="text-red-400 text-xs">{fieldState?.error && fieldState.error.message}</small>
+                      <small className="text-red-400 text-xs">
+                        {fieldState?.error && fieldState.error.message}
+                      </small>
                     </>
                   )}
                 />

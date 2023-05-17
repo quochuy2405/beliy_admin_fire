@@ -3,11 +3,10 @@ import { ref, uploadBytes } from 'firebase/storage'
 import { db, storage } from './config'
 
 // Create a new document
-const create = async (collection: any, data: object) => {
-  const docRef = await addDoc(collection, data)
+const create = async (collectionRef: any, data: object) => {
+  const docRef = await addDoc(collectionRef, data)
   return docRef.id
 }
-
 // Read a single document
 const read = async (collectionName: string, id: string) => {
   const docRef = doc(collection(db, collectionName), id)
@@ -20,8 +19,8 @@ const read = async (collectionName: string, id: string) => {
 }
 
 // Read all documents in a collection
-const readAll = async (collection: any) => {
-  const querySnapshot = await getDocs(collection)
+const readAll = async (collectionRef: any) => {
+  const querySnapshot = await getDocs(collectionRef)
   const documents = []
   querySnapshot.docs.forEach((doc: any) => {
     documents.push({ id: doc.id, ...doc.data() })
@@ -30,13 +29,13 @@ const readAll = async (collection: any) => {
 }
 
 // Update a document
-const update = async (collection: any, id: string, data: object) => {
-  await updateDoc(doc(collection, id), data)
+const update = async (collectionRef: any, id: string, data: object) => {
+  await updateDoc(doc(collectionRef, id), data)
 }
 
 // Delete a document
-const deleteItem = async (collection: any, id: string) => {
-  await deleteDoc(doc(db, collection, id))
+const deleteItem = async (collectionRef: any, id: string) => {
+  await deleteDoc(doc(db, collectionRef, id))
 }
 
 const addImage = async (file: File, path: string): Promise<string> => {
