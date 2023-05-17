@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -19,54 +15,22 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/components/*": [
-        "components/*"
-      ],
-      "@/hooks/*": [
-        "hooks/*"
-      ],
-      "@/mocks/*": [
-        "mocks/*"
-      ],
-      "@/pages/*": [
-        "pages/*"
-      ],
-      "@/lib/*": [
-        "lib/*"
-      ],
-      "@/styles/*": [
-        "styles/*"
-      ],
-      "@/types/*": [
-        "types/*"
-      ],
-      "@/assets/*": [
-        "assets/*"
-      ],
-      "@/contexts/*": [
-        "contexts/*"
-      ],
-      "@/utils/*": [
-        "utils/*"
-      ],
-      "@/constants/*": [
-        "constants/*"
-      ],
-      "@/providers/*": [
-        "providers/*"
-      ],
-      "@/layouts/*": [
-        "layouts/*"
-      ],
-      "@/redux/*": [
-        "redux/*"
-      ],
-      "@/resolvers/*": [
-        "resolvers/*"
-      ],
-      "@/firebase/*": [
-        "firebase/*"
-      ]
+      "@/components/*": ["components/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/mocks/*": ["mocks/*"],
+      "@/pages/*": ["pages/*"],
+      "@/lib/*": ["lib/*"],
+      "@/styles/*": ["styles/*"],
+      "@/types/*": ["types/*"],
+      "@/assets/*": ["assets/*"],
+      "@/contexts/*": ["contexts/*"],
+      "@/utils/*": ["utils/*"],
+      "@/constants/*": ["constants/*"],
+      "@/providers/*": ["providers/*"],
+      "@/layouts/*": ["layouts/*"],
+      "@/redux/*": ["redux/*"],
+      "@/resolvers/*": ["resolvers/*"],
+      "@/firebase/*": ["firebase/*"]
     },
     "incremental": true,
     "plugins": [
@@ -75,14 +39,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "next.config.js",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

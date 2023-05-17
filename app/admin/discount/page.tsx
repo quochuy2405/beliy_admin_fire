@@ -1,9 +1,7 @@
-import { Discount } from "@/components/templates"
+import { Discount } from '@/components/templates'
 
 const DiscountPage = () => {
-    return (
-        <Discount />
-    )
+  return <Discount />
 }
 
 export default DiscountPage

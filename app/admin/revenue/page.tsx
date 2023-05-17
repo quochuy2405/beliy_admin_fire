@@ -1,9 +1,7 @@
-import { Revenue } from "@/components/templates"
+import { Revenue } from '@/components/templates'
 
 const RevenuePage = () => {
-    return (
-        <Revenue />
-    )
+  return <Revenue />
 }
 
 export default RevenuePage
