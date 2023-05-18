@@ -4,7 +4,7 @@ import { columnTableAccountManagers } from '@/components/makecolumns'
 import { EmployeeManagers } from '@/components/templates'
 
 const EmployeeManagersPage = () => {
-  const columns = columnTableAccountManagers()
+  const columns = columnTableAccountManagers(false)
   const datasets = [
     {
       username: 'huy2121',
