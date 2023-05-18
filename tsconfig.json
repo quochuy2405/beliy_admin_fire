@@ -19,7 +19,7 @@
       "@/hooks/*": ["hooks/*"],
       "@/mocks/*": ["mocks/*"],
       "@/pages/*": ["pages/*"],
-      "@/lib/*": ["lib/*"],
+      "@/metadata/*": ["metadata/*"],
       "@/styles/*": ["styles/*"],
       "@/types/*": ["types/*"],
       "@/assets/*": ["assets/*"],

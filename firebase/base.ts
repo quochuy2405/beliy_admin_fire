@@ -1,13 +1,13 @@
 import {
+  QueryDocumentSnapshot,
+  QuerySnapshot,
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
-  query,
-  updateDoc,
-  where
+  updateDoc
 } from 'firebase/firestore'
 import { ref, uploadBytes } from 'firebase/storage'
 import { db, storage } from './config'
@@ -28,15 +28,29 @@ const read = async (collectionName: string, id: string) => {
   }
 }
 // Find all documents in a collection that match a specific condition
-const findAll = async (collectionName: string, conditionKey: string, conditionValue: any) => {
-  const q = query(collection(db, collectionName), where(conditionKey, '==', conditionValue))
-  const querySnapshot = await getDocs(q)
-  const docs = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data()
-  }))
-  return docs
+export type Condition<T> = [string, T[keyof T] | T[keyof T][]]
+
+const findAll = async <T>(collectionRef: any, conditions: Condition<T>[]): Promise<T[]> => {
+  const querySnapshot: QuerySnapshot<T> = await getDocs(collectionRef)
+  const data: T[] = []
+  querySnapshot.forEach((doc: QueryDocumentSnapshot<T>) => {
+    const docData = doc.data()
+    if (doc.exists() && docData) {
+      // Check if snapshot exists and contains data
+      const item: T = { ...docData, id: doc.id } // Include document ID as 'id' property in returned data
+      if (
+        conditions.every((condition) => {
+          const [key, value] = condition
+          return Array.isArray(value) ? value.includes(item[key]) : item[key] === value
+        })
+      ) {
+        data.push(item)
+      }
+    }
+  })
+  return data
 }
+
 // Read all documents in a collection
 const readAll = async (collectionRef: any) => {
   const querySnapshot = await getDocs(collectionRef)

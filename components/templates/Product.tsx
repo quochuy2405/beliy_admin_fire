@@ -594,7 +594,7 @@ const Product: React.FC<ProductProps> = ({
                 {field.value.map((item) => (
                   <div
                     key={item}
-                    className="w-[90%] md:w-full bg-white rounded-lg h-82 flex flex-col p-4 gap-2 m-auto"
+                    className="w-[90%] md:w-full bg-white rounded-lg h-82 flex flex-col p-4 gap-2 m-auto shadow-lg"
                   >
                     <div className="w-full h-[300px] md:h-[55%] ">
                       <Image

@@ -3,7 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout'
 import '../../styles/global.css'
 import { Inter } from 'next/font/google'
 import { SnackbarProvider } from 'notistack'
-
+import 'metadata'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Layout({ children }) {

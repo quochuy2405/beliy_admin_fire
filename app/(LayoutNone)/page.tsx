@@ -4,6 +4,7 @@ import { loginSchema } from '@/utils/login'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import 'metadata'
 
 const LoginPage = () => {
   const router = useRouter()
