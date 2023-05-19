@@ -5,3 +5,5 @@ export type StockType = {
   imageURL?: string
   id?: string
 }
+
+export type StockCreateType = { code: string; name: string }

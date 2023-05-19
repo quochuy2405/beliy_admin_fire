@@ -6,6 +6,7 @@ export type ProductType = {
   imageURL?: string
   price: number
   colors: Array<string>
+  quantity: number
   highlights: string
   details: string
   category: string

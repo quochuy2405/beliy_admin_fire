@@ -103,29 +103,29 @@ const Product: React.FC<ProductProps> = ({
         </div>
       </div>
       <div className="flex-1 w-full rounded-lg overflow-x-auto pb-12">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="flex justify-center gap-5 items-start flex-wrap h-[440px]">
           <Controller
             name="products"
             control={stateStore.control}
             defaultValue={false}
             render={({ field }) => (
               <>
-                {field.value.map((item) => (
+                {[...field.value].map((item) => (
                   <div
-                    key={item}
-                    className="w-[90%] md:w-full bg-white rounded-lg h-82 flex flex-col p-4 gap-2 m-auto shadow-lg"
+                    key={item?.imagesURL[0]}
+                    className="w-[90%] min-w-[270px] md:max-w-[280px] md:w-[33.333%] lg:w-[25%] bg-white rounded-lg flex flex-col p-4 gap-2 shadow-lg h-full flex-1"
                   >
-                    <div className="w-full h-[300px] md:h-[55%] ">
+                    <div className="w-full h-[240px] relative overflow-hidden">
                       <Image
-                        src={item.imageURL || 'https://www.freeiconspng.com/img/23494'}
+                        src={item.imagesURL[0] || 'https://www.freeiconspng.com/img/23494'}
                         unoptimized
                         width={10}
                         height={100}
                         alt=""
-                        className="w-full h-full object-contain md:object-cover"
+                        className="w-full max-h-[240px] object-contain md:object-cover"
                       />
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-start justify-between flex-1">
                       <p className="w-fit p-2 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
                         {item.name}
                       </p>
@@ -134,12 +134,12 @@ const Product: React.FC<ProductProps> = ({
                       </p>
                     </div>
 
-                    <div className="w-full text-white text-sm flex-1 flex items-center justify-between">
+                    <div className="w-full text-white text-sm flex-1 flex items-start justify-between gap-2">
                       <p className="text-white bg-red-600 font-medium rounded-lg text-xs px-4 py-2">
                         Giá: {Number(item.price)?.toLocaleString()}
                       </p>
-                      <div className="flex gap-1">
-                        <div className="flex gap-1">
+                      <div className="flex flex-1 flex-wrap justify-end gap-1">
+                        <div className="flex flex-1 flex-wrap gap-1">
                           {colors.map(
                             (color) =>
                               item.colors?.includes(color) && (
@@ -164,10 +164,11 @@ const Product: React.FC<ProductProps> = ({
                         </div>
                       </div>
                     </div>
-                    <div className="w-full text-white text-sm flex-1 flex items-center justify-between">
-                      <div className="flex gap-1">
-                        {[...item.sizes].map((item) => (
+                    <div className="w-full text-white text-sm flex-1 flex items-start justify-between gap-2">
+                      <div className="flex gap-1 flex-1 flex-wrap justify-start">
+                        {[...item.sizes].map((item, index) => (
                           <p
+                            key={item + index}
                             className={clsx(
                               'w-7 h-7 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-xs'
                             )}
@@ -188,6 +189,7 @@ const Product: React.FC<ProductProps> = ({
                             'price',
                             'colors',
                             'highlights',
+                            'quantity',
                             'details',
                             'category'
                           ]
@@ -195,7 +197,10 @@ const Product: React.FC<ProductProps> = ({
                             dataForm.setValue(name, item[name])
                           })
 
-                          stateStore.setValue('imagePreviews', item['imageURL'])
+                          item['imagesURL']?.map((url: string, index: number) => {
+                            stateStore.setValue(`imagePreviews.${index + 1}`, url)
+                          })
+
                           stateStore.setValue('isModal', true)
                           stateStore.setValue('isEdit', true)
                         }}
@@ -221,7 +226,10 @@ const Product: React.FC<ProductProps> = ({
               field.onChange(false)
               dataForm.reset()
               stateStore.resetField('fileImageNews')
-              stateStore.resetField('imagePreviews')
+              stateStore.resetField('imagePreviews.1')
+              stateStore.resetField('imagePreviews.2')
+              stateStore.resetField('imagePreviews.3')
+              stateStore.resetField('imagePreviews.4')
               stateStore.resetField('isModal')
             }}
             isOpen={field.value}
@@ -268,10 +276,9 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span> or drag and
-                                  drop
+                                  <span className="font-semibold">Click to upload</span>
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
                                 </p>
                               </div>
@@ -326,10 +333,9 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span> or drag and
-                                  drop
+                                  <span className="font-semibold">Click to upload</span>
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
                                 </p>
                               </div>
@@ -384,10 +390,9 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span> or drag and
-                                  drop
+                                  <span className="font-semibold">Click to upload</span>
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
                                 </p>
                               </div>
@@ -442,10 +447,9 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span> or drag and
-                                  drop
+                                  <span className="font-semibold">Click to upload</span>
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
                                 </p>
                               </div>
@@ -463,8 +467,8 @@ const Product: React.FC<ProductProps> = ({
                     />
                   </label>
                 </div>
-                <div className="flex-[1.5] flex gap-2 items-start">
-                  <div className="flex flex-col gap-2">
+                <div className="flex-[1.5] flex flex-col md:flex-row gap-2 items-start ">
+                  <div className="flex flex-col flex-1  gap-2 w-full">
                     <div>
                       <Controller
                         name="name"
@@ -480,7 +484,7 @@ const Product: React.FC<ProductProps> = ({
                         )}
                       />
                     </div>
-                    <div className="grid">
+                    <div>
                       <Controller
                         name="imageName"
                         defaultValue=""
@@ -572,12 +576,31 @@ const Product: React.FC<ProductProps> = ({
                           <TextField
                             title="Giá sản phẩm"
                             {...field}
+                            type="number"
                             errors={fieldState.error}
                             required
                           />
                         )}
                       />
                     </div>
+                    <div>
+                      <Controller
+                        name="quantity"
+                        defaultValue={0}
+                        control={dataForm.control}
+                        render={({ field, fieldState }) => (
+                          <TextField
+                            {...field}
+                            type="number"
+                            title="Số lượng hàng"
+                            errors={fieldState.error}
+                            required
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 flex-1 w-full">
                     <div>
                       <Controller
                         name="category"
@@ -606,8 +629,6 @@ const Product: React.FC<ProductProps> = ({
                         )}
                       />
                     </div>
-                  </div>
-                  <div className="flex flex-col gap-2 flex-1">
                     <div>
                       <Controller
                         name="details"
@@ -648,7 +669,7 @@ const Product: React.FC<ProductProps> = ({
                   type="submit"
                   className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-cente"
                 >
-                  Tạo
+                  {!stateStore.getValues('isEdit') ? 'Tạo' : 'Cập nhật'}
                 </button>
               </div>
             </form>

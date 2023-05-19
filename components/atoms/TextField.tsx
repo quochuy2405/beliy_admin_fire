@@ -4,7 +4,7 @@ import { FieldError } from 'react-hook-form'
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string
   name: string
-  type?: 'text' | 'password'
+  type?: 'text' | 'password' | 'number'
   errors?: FieldError
   required?: boolean
   className?: string

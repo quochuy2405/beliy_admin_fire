@@ -22,7 +22,7 @@ const read = async (collectionName: string, id: string) => {
   const docRef = doc(collection(db, collectionName), id)
   const docSnap = await getDoc(docRef)
   if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() }
+    return { id: docSnap.id, ...(docSnap.data() as any) }
   } else {
     return null
   }

@@ -66,13 +66,16 @@ const ProductPage = () => {
         enqueueSnackbar('Thêm sản phẩm thành công', { variant: 'success' })
         dataForm.reset()
         stateStore.resetField('fileImageNews')
-        stateStore.resetField('imagePreviews')
+        stateStore.resetField('imagePreviews.1')
+        stateStore.resetField('imagePreviews.2')
+        stateStore.resetField('imagePreviews.3')
+        stateStore.resetField('imagePreviews.4')
         stateStore.resetField('isModal')
 
-        const stocksRef = collection(db, 'stocks')
+        const stocksRef = collection(db, 'initStock')
         await create(stocksRef, {
           category: data.category,
-          quantity: 1,
+          quantity: 0,
           imageName: data.imageName
         })
 
@@ -85,10 +88,20 @@ const ProductPage = () => {
   }
 
   const editProduct = (data: ProductType) => {
-    const { category, colors, name, price, sizes, id, highlights, details } = data
+    const { category, colors, name, price, sizes, id, highlights, details, quantity } = data
 
     const productRef = collection(db, 'products')
-    update(productRef, id, { category, colors, name, price, sizes, id, highlights, details })
+    update(productRef, id, {
+      category,
+      colors,
+      name,
+      price,
+      sizes,
+      id,
+      highlights,
+      details,
+      quantity
+    })
       .then(() => {
         enqueueSnackbar('Cập nhật thành công', { variant: 'success' })
         stateStore.resetField('fileImageNews')
@@ -126,21 +139,27 @@ const ProductPage = () => {
     const productRef = collection(db, 'products')
     readAll(productRef).then(async (res) => {
       const products = res.map(async (item) => {
-        const imageRef = ref(
-          storage,
-          'products/' +
-            item.imageName
-              .trim()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .toLocaleLowerCase()
-              .replace(/\s/g, '_') +
-            '/1'
-        )
-        const imageURL = await getDownloadURL(imageRef)
+        const names = [1, 2, 3, 4]
+        const imagesURL = names.map(async (name) => {
+          const imageRef = ref(
+            storage,
+            'products/' +
+              item.imageName
+                .trim()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLocaleLowerCase()
+                .replace(/\s/g, '_') +
+              '/' +
+              name
+          )
+          const imageURL = await getDownloadURL(imageRef)
+          return imageURL
+        })
+
         return {
           ...item,
-          imageURL
+          imagesURL: await Promise.all(imagesURL)
         }
       })
       stateStore.setValue('products', await Promise.all(products))
