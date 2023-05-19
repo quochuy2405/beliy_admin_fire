@@ -64,21 +64,12 @@ const ProductPage = () => {
         })
 
         enqueueSnackbar('Thêm sản phẩm thành công', { variant: 'success' })
-        dataForm.reset()
-        stateStore.resetField('fileImageNews')
-        stateStore.resetField('imagePreviews.1')
-        stateStore.resetField('imagePreviews.2')
-        stateStore.resetField('imagePreviews.3')
-        stateStore.resetField('imagePreviews.4')
-        stateStore.resetField('isModal')
-
         const stocksRef = collection(db, 'initStock')
         await create(stocksRef, {
           category: data.category,
           quantity: 0,
           imageName: data.imageName
         })
-
         setRefresh((cur) => !cur)
       })
       .catch((error) => {
@@ -88,7 +79,8 @@ const ProductPage = () => {
   }
 
   const editProduct = (data: ProductType) => {
-    const { category, colors, name, price, sizes, id, highlights, details, quantity } = data
+    const { category, colors, name, price, sizes, id, highlights, details, quantity, imageName } =
+      data
 
     const productRef = collection(db, 'products')
     update(productRef, id, {
@@ -102,11 +94,21 @@ const ProductPage = () => {
       details,
       quantity
     })
-      .then(() => {
-        enqueueSnackbar('Cập nhật thành công', { variant: 'success' })
-        stateStore.resetField('fileImageNews')
-        stateStore.resetField('imagePreviews')
-        stateStore.resetField('isModal')
+      .then(async () => {
+        const folder = imageName
+          .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLocaleLowerCase()
+          .replace(/\s/g, '_')
+
+        const images = stateStore.getValues('fileImageNews')
+        console.log('first', images)
+        await images.forEach(async (image) => {
+          const [key, value] = Object.entries(image)[0]
+          await addImage(value as File, 'products/' + folder + '/' + key)
+        })
+        await enqueueSnackbar('Cập nhật thành công', { variant: 'success' })
         setRefresh((cur) => !cur)
       })
       .catch(() => {
@@ -136,25 +138,39 @@ const ProductPage = () => {
   }
 
   useEffect(() => {
+    dataForm.reset()
+    stateStore.resetField('fileImageNews')
+    stateStore.resetField('imagePreviews.1')
+    stateStore.resetField('imagePreviews.2')
+    stateStore.resetField('imagePreviews.3')
+    stateStore.resetField('imagePreviews.4')
+    stateStore.resetField('isModal')
+
     const productRef = collection(db, 'products')
     readAll(productRef).then(async (res) => {
       const products = res.map(async (item) => {
         const names = [1, 2, 3, 4]
+        try {
+        } catch (error) {}
         const imagesURL = names.map(async (name) => {
-          const imageRef = ref(
-            storage,
-            'products/' +
-              item.imageName
-                .trim()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLocaleLowerCase()
-                .replace(/\s/g, '_') +
-              '/' +
-              name
-          )
-          const imageURL = await getDownloadURL(imageRef)
-          return imageURL
+          try {
+            const imageRef = ref(
+              storage,
+              'products/' +
+                item.imageName
+                  .trim()
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .toLocaleLowerCase()
+                  .replace(/\s/g, '_') +
+                '/' +
+                name
+            )
+            const imageURL = await getDownloadURL(imageRef)
+            return imageURL
+          } catch (error) {
+            return ''
+          }
         })
 
         return {

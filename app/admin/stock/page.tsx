@@ -89,18 +89,21 @@ const StockPage = () => {
       const initStockRef = collection(db, 'initStock')
       await readAll(initStockRef).then(async (res) => {
         const stocks = res.map(async (item) => {
-          const imageRef = ref(
-            storage,
-            'products/' +
-              item.imageName
-                .trim()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLocaleLowerCase()
-                .replace(/\s/g, '_') +
-              '/1'
-          )
-          const imageURL = await getDownloadURL(imageRef)
+          let imageURL = ''
+          try {
+            const imageRef = ref(
+              storage,
+              'products/' +
+                item.imageName
+                  .trim()
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .toLocaleLowerCase()
+                  .replace(/\s/g, '_') +
+                '/1'
+            )
+            imageURL = await getDownloadURL(imageRef)
+          } catch (error) {}
 
           return {
             id: item.id,
