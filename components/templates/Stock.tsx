@@ -153,7 +153,7 @@ const Stock: React.FC<StockProps> = ({
           )
         }}
       />
-      <div className="flex gap-4 bg-white rounded-lg overflow-hidden">
+      <div className="flex gap-4 bg-white rounded-lg overflow-hidden p-2">
         <div className="bg-white flex w-full text-sm font-medium text-center text-gray-500 border-b border-gray-200">
           <ul className="flex flex-wrap -mb-px">
             {tabs.map((item) => (
@@ -171,21 +171,14 @@ const Stock: React.FC<StockProps> = ({
             ))}
           </ul>
 
-          <div className="flex-1 pr-4 h-full flex justify-end items-center gap-2">
-            <div>
+          <div className="flex-1 pr-4 h-full flex-wrap flex justify-end items-center gap-2">
+            <div className="min-w-[120px]">
               <Controller
                 name="stockCurrent"
                 control={stateStore.control}
                 defaultValue=""
                 render={({ field: { value, onChange } }) => (
                   <div className="flex items-center gap-2 w-fit h-full">
-                    <label
-                      htmlFor="inventory"
-                      className="block h-full whitespace-nowrap  text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Kho:
-                    </label>
-
                     <select
                       value={value}
                       onChange={(e) => {

@@ -158,7 +158,7 @@ const AdminLayout = ({ children }) => {
       <div className="flex flex-1 w-full h-full relative">
         <aside
           id="bar-mobile"
-          className="z-20 h-full absolute top-0 w-[40%] flex-shrink-0 md:w-64 overflow-y-auto bg-white md:block shadow-lg md:relative md:!translate-x-0"
+          className="z-20 h-full absolute top-0 w-fit flex-shrink-0 md:w-64 overflow-y-auto bg-white md:block shadow-lg md:relative md:!translate-x-0"
         >
           <div className="text-gray-500">
             <div className="p-4 w-full">
@@ -179,12 +179,14 @@ const AdminLayout = ({ children }) => {
                       color={pathname === '/admin' ? 'orange' : 'black'}
                       className="w-5 h-5"
                     />
-                    <span className="ml-2">Trang chủ</span>
+                    <span className="ml-2 hidden md:block">Trang chủ</span>
                   </Link>
                 </li>
               </ul>
               <ul className="pb-4 flex flex-col gap-2">
-                <li className="relative py-1 px-2 text-sm font-bold text-gray-default">QUẢN LÝ</li>
+                <li className="relative py-1 px-2 text-sm font-bold text-gray-default hidden md:block">
+                  QUẢN LÝ
+                </li>
                 {USERS.map((item) => (
                   <li className="relative py" key={item.key}>
                     <Link
@@ -198,13 +200,13 @@ const AdminLayout = ({ children }) => {
                       passHref
                     >
                       {item.icon(pathname === item.key)}
-                      <span className="ml-2">{item.title}</span>
+                      <span className="ml-2 hidden md:block">{item.title}</span>
                     </Link>
                   </li>
                 ))}
               </ul>
               <ul className="pb-4 flex flex-col gap-0.5">
-                <li className="relative py-1 px-2 text-sm font-bold text-gray-default">
+                <li className="relative py-1 px-2 text-sm font-bold text-gray-default hidden md:block">
                   QUẢN LÝ KHÁC
                 </li>
                 {POCS.map((item) => (
@@ -220,7 +222,7 @@ const AdminLayout = ({ children }) => {
                       passHref
                     >
                       {item.icon(pathname === item.key)}
-                      <span className="ml-2">{item.title}</span>
+                      <span className="ml-2 hidden md:block">{item.title}</span>
                     </Link>
                   </li>
                 ))}

@@ -71,13 +71,13 @@ const Product: React.FC<ProductProps> = ({
   }
   return (
     <div className="flex flex-col w-full h-full gap-2">
-      <div className="flex gap-4 bg-white rounded-lg overflow-hidden">
+      <div className="flex gap-4 bg-white rounded-lg overflow-hidden p-2">
         <div className="bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200">
           <ul className="flex flex-wrap -mb-px">
             {tabs.map((item) => (
               <li className="mr-2" key={item.key}>
                 <Link
-                  href={`/admin/Product?tab=${item.key}`}
+                  href={`/admin/products?tab=${item.key}`}
                   className={clsx('inline-block p-4  rounded-t-l', {
                     'active text-blue-600 border-b-2 border-blue-600':
                       tab === item.key || (!tab && item.key === 'all')
