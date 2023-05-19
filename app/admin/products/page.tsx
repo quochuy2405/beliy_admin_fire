@@ -6,7 +6,7 @@ import { ProductType } from '@/types/product'
 import { collection } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { useSnackbar } from 'notistack'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 const ProductPage = () => {
@@ -15,20 +15,19 @@ const ProductPage = () => {
   const stateStore = useForm({
     defaultValues: {
       products: [],
+      isModal: false,
       isEdit: false,
-      isNew: false,
-      imageNewPreview: null,
-      fileImageNew: null
+      imagePreviews: null,
+      fileImageNews: []
     }
   })
-  const editForm = useForm<ProductType>()
-  const createForm = useForm<ProductType>()
+  const dataForm = useForm<ProductType>()
 
   const addProduct = async (data: ProductType) => {
-    const newImage = stateStore.getValues('fileImageNew')
+    const images = stateStore.getValues('fileImageNews')
     // Create or update the product data
-    if (!newImage) {
-      enqueueSnackbar('Hãy chọn ảnh sản phẩm', { variant: 'error' })
+    if (!images?.length) {
+      enqueueSnackbar('Hãy chọn đủ ảnh sản phẩm', { variant: 'error' })
       return
     }
     const imageRef = ref(
@@ -52,31 +51,32 @@ const ProductPage = () => {
 
     await create(productsRef, data)
       .then(async () => {
-        if (newImage) {
-          // If a new image is selected, upload it to the storage
-          await addImage(
-            newImage,
-            'products/' +
-              data.imageName
-                .trim()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLocaleLowerCase()
-                .replace(/\s/g, '_')
-          )
-          enqueueSnackbar('Thêm sản phẩm thành công', { variant: 'success' })
-          createForm.reset()
-          stateStore.reset()
+        // If a new image is selected, upload it to the storage
+        const folder = data.imageName
+          .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLocaleLowerCase()
+          .replace(/\s/g, '_')
 
-          const stocksRef = collection(db, 'stocks')
-          await create(stocksRef, {
-            category: data.category,
-            quantity: 1,
-            imageName: data.imageName
-          })
+        await images.forEach(async (image, index) => {
+          await addImage(image[index + 1], 'products/' + folder + '/' + (index + 1).toString())
+        })
 
-          setRefresh((cur) => !cur)
-        }
+        enqueueSnackbar('Thêm sản phẩm thành công', { variant: 'success' })
+        dataForm.reset()
+        stateStore.resetField('fileImageNews')
+        stateStore.resetField('imagePreviews')
+        stateStore.resetField('isModal')
+
+        const stocksRef = collection(db, 'stocks')
+        await create(stocksRef, {
+          category: data.category,
+          quantity: 1,
+          imageName: data.imageName
+        })
+
+        setRefresh((cur) => !cur)
       })
       .catch((error) => {
         console.log(error)
@@ -85,26 +85,38 @@ const ProductPage = () => {
   }
 
   const editProduct = (data: ProductType) => {
-    const { category, color, name, price, size, id } = data
-    console.log(category, color, name, price, size, id)
+    const { category, colors, name, price, sizes, id, highlights, details } = data
+
     const productRef = collection(db, 'products')
-    update(productRef, id, { category, color, name, price, size })
+    update(productRef, id, { category, colors, name, price, sizes, id, highlights, details })
       .then(() => {
         enqueueSnackbar('Cập nhật thành công', { variant: 'success' })
-        stateStore.reset()
+        stateStore.resetField('fileImageNews')
+        stateStore.resetField('imagePreviews')
+        stateStore.resetField('isModal')
         setRefresh((cur) => !cur)
       })
       .catch(() => {
         enqueueSnackbar('Cập nhật thất bại', { variant: 'error' })
       })
   }
-  const previewImageNew = (files: FileList) => {
+  const previewImageNew = (files: FileList, name: string) => {
     const file = files[0]
     if (file) {
-      stateStore.setValue('fileImageNew', file)
+      const images = stateStore.getValues('fileImageNews')
+      const existFileIndex = images.findIndex((item) => item.hasOwnProperty(name))
+
+      if (existFileIndex !== -1) {
+        images[existFileIndex][name] = file
+      } else {
+        const newImage = { [name]: file }
+        images.push(newImage)
+      }
+      stateStore.setValue('fileImageNews', images)
+
       const reader = new FileReader()
       reader.addEventListener('load', () => {
-        stateStore.setValue('imageNewPreview', reader.result)
+        stateStore.setValue(`imagePreviews.${name}`, reader.result)
       })
       reader.readAsDataURL(file)
     }
@@ -122,7 +134,8 @@ const ProductPage = () => {
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
               .toLocaleLowerCase()
-              .replace(/\s/g, '_')
+              .replace(/\s/g, '_') +
+            '/1'
         )
         const imageURL = await getDownloadURL(imageRef)
         return {
@@ -136,8 +149,7 @@ const ProductPage = () => {
 
   const props = {
     stateStore,
-    createForm,
-    editForm,
+    dataForm,
     addProduct,
     editProduct,
     previewImageNew

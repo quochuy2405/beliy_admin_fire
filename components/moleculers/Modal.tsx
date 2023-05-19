@@ -16,12 +16,12 @@ const Modal = ({ isOpen, handleClose, children, title, size = '3xl' }) => {
       )}
     >
       <div
-        className={clsx(`relative w-full  max-h-full`, {
+        className={clsx(`relative w-full  max-h-full max-w-6xl`, {
           'max-w-md': size === 'md',
           'max-w-lg': size === 'lg',
           'max-w-xl': size === 'xl',
           'max-w-2xl': size === '2xl',
-          'max-w-3xl': size === '3xl'
+          'max-w-6xl': size === '3xl'
         })}
       >
         {/* Modal content */}
