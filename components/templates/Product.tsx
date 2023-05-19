@@ -145,7 +145,7 @@ const Product: React.FC<ProductProps> = ({
                               item.colors?.includes(color) && (
                                 <p
                                   key={color}
-                                  className={clsx(`w-6 h-6 rounded-full border-2`, {
+                                  className={clsx(`w-4 h-4 rounded-full border-2`, {
                                     'border-black': item.colors?.includes(color),
                                     'bg-[#025464]': color === '#025464',
                                     'bg-[#E57C23]': color === '#E57C23',
@@ -170,13 +170,19 @@ const Product: React.FC<ProductProps> = ({
                           <p
                             key={item + index}
                             className={clsx(
-                              'w-7 h-7 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-xs'
+                              'w-6 h-6 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-[9px]'
                             )}
                           >
                             {item}
                           </p>
                         ))}
                       </div>
+                      <button
+                        type="button"
+                        className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
+                      >
+                        Xóa
+                      </button>
                       <button
                         type="button"
                         className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
