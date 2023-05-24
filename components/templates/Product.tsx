@@ -166,7 +166,8 @@ const Product: React.FC<ProductProps> = ({
                             'highlights',
                             'quantity',
                             'details',
-                            'category'
+                            'category',
+                            'descriptions'
                           ]
                           names.forEach((name) => {
                             dataForm.setValue(name, item[name])
