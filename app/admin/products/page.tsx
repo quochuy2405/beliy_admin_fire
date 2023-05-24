@@ -1,27 +1,42 @@
 'use client'
 import { Product } from '@/components/templates'
-import { addImage, create, readAll, update } from '@/firebase/base'
+import { addImage, create, deleteItem, readAll, update } from '@/firebase/base'
 import { db, storage } from '@/firebase/config'
+import { schema } from '@/resolvers/product'
 import { ProductType } from '@/types/product'
+import { CategoriesType } from '@/types/stocks'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { collection } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-
+export type StateProductPageType = {
+  products: Array<ProductType>
+  isModal: boolean
+  isEdit: boolean
+  isDelete: string
+  imagePreviews: any
+  fileImageNews: Array<any>
+  categories: Array<CategoriesType>
+}
 const ProductPage = () => {
   const { enqueueSnackbar } = useSnackbar()
   const [refresh, setRefresh] = useState(false)
-  const stateStore = useForm({
+  const stateStore = useForm<StateProductPageType>({
     defaultValues: {
       products: [],
       isModal: false,
       isEdit: false,
+      isDelete: '',
       imagePreviews: null,
-      fileImageNews: []
+      fileImageNews: [],
+      categories: []
     }
   })
-  const dataForm = useForm<ProductType>()
+  const dataForm = useForm<ProductType>({
+    resolver: yupResolver(schema)
+  })
 
   const addProduct = async (data: ProductType) => {
     const images = stateStore.getValues('fileImageNews')
@@ -79,18 +94,28 @@ const ProductPage = () => {
   }
 
   const editProduct = (data: ProductType) => {
-    const { category, colors, name, price, sizes, id, highlights, details, quantity, imageName } =
-      data
-
-    const productRef = collection(db, 'products')
-    update(productRef, id, {
+    const {
       category,
-      colors,
+      descriptions,
       name,
       price,
       sizes,
       id,
       highlights,
+      details,
+      quantity,
+      imageName
+    } = data
+
+    const productRef = collection(db, 'products')
+    update(productRef, id, {
+      category,
+      name,
+      price,
+      sizes,
+      id,
+      highlights,
+      descriptions,
       details,
       quantity
     })
@@ -136,7 +161,14 @@ const ProductPage = () => {
       reader.readAsDataURL(file)
     }
   }
-
+  useEffect(() => {
+    const categoriesRef = collection(db, 'categories')
+    readAll(categoriesRef)
+      .then((data) => {
+        stateStore.setValue('categories', data)
+      })
+      .catch((error) => console.log(error))
+  }, [])
   useEffect(() => {
     dataForm.reset()
     stateStore.resetField('fileImageNews')
@@ -181,13 +213,25 @@ const ProductPage = () => {
       stateStore.setValue('products', await Promise.all(products))
     })
   }, [refresh])
-
+  const deleteData = async (id: string) => {
+    if (id) {
+      await deleteItem('products', id)
+        .then(() => {
+          enqueueSnackbar('Đã xóa thành công', { variant: 'success' })
+          setRefresh((cur) => !cur)
+        })
+        .catch(() => {
+          enqueueSnackbar('Lỗi', { variant: 'error' })
+        })
+    }
+  }
   const props = {
     stateStore,
     dataForm,
     addProduct,
     editProduct,
-    previewImageNew
+    previewImageNew,
+    deleteData
   }
   return <Product {...props} />
 }

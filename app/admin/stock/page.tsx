@@ -2,29 +2,46 @@
 import { Stock } from '@/components/templates'
 import { create, read, readAll, update } from '@/firebase/base'
 import { db, storage } from '@/firebase/config'
-import { StockCreateType, StockType } from '@/types/stocks'
+import { schema } from '@/resolvers/stock_categories'
+import { CategoriesType, StockCreateType, StockType } from '@/types/stocks'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { OptionType } from 'common'
 import { collection } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
+import { useSearchParams } from 'next/navigation'
 import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-
+export type StateStockPageType = {
+  isEdit: boolean
+  isNew: boolean
+  stocks: Array<StockType>
+  stockOpt: Array<OptionType>
+  initStock: Array<StockType>
+  stockCurrent: ''
+  categories: Array<CategoriesType>
+}
 const StockPage = () => {
   const { enqueueSnackbar } = useSnackbar()
+  const tab = useSearchParams().get('tab')
   const [refresh, setRefresh] = useState(false)
-  const stateStore = useForm({
+  const stockRef = useRef<Array<StockType>>([])
+  const stateStore = useForm<StateStockPageType>({
     defaultValues: {
       isEdit: false,
       isNew: false,
       stocks: [],
       stockOpt: [],
       initStock: [],
-      stockCurrent: ''
+      stockCurrent: '',
+      categories: []
     }
   })
 
   const editForm = useForm<StockType>()
-  const createForm = useForm<StockCreateType>()
+  const createForm = useForm<StockCreateType>({
+    resolver: yupResolver(schema)
+  })
 
   const addStock = async (data: StockCreateType) => {
     const stocksRef = collection(db, 'stocks')
@@ -83,6 +100,14 @@ const StockPage = () => {
   useEffect(() => {
     getStockOpts()
   }, [])
+  useEffect(() => {
+    const categoriesRef = collection(db, 'categories')
+    readAll(categoriesRef)
+      .then((data) => {
+        stateStore.setValue('categories', data)
+      })
+      .catch((error) => console.log(error))
+  }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -112,8 +137,9 @@ const StockPage = () => {
             imageName: item.imageName
           }
         })
-        stateStore.setValue('stocks', await Promise.all(stocks))
-        stateStore.setValue('initStock', await Promise.all(stocks))
+        stockRef.current = (await Promise.all(stocks)) as any
+        stateStore.setValue('stocks', stockRef.current)
+        stateStore.setValue('initStock', (await Promise.all(stocks)) as any)
       })
       const id = stateStore.getValues('stockCurrent')
       if (id) await onChangeSelect(id)
@@ -135,11 +161,23 @@ const StockPage = () => {
           }
           return item
         })
-
+        stockRef.current = updateStock
         stateStore.setValue('stocks', updateStock)
       }
     })
   }
+
+  useEffect(() => {
+    if (!tab || tab === 'all') {
+      console.log(stockRef.current)
+      stateStore.setValue('stocks', stockRef.current)
+    } else {
+      stateStore.setValue(
+        'stocks',
+        stockRef.current.filter((item) => item.category === tab)
+      )
+    }
+  }, [tab])
 
   const props = {
     stateStore,

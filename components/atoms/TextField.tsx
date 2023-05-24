@@ -13,7 +13,7 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   ({ title, errors = {}, required = false, ...props }, ref) => {
     return (
-      <>
+      <div className="relative">
         <label
           htmlFor="name"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -30,7 +30,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             {errors?.message}
           </p>
         )}
-      </>
+      </div>
     )
   }
 )

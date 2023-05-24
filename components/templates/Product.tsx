@@ -1,5 +1,6 @@
 'use client'
 import { ProductType } from '@/types/product'
+import { StateProductPageType } from 'app/admin/products/page'
 import clsx from 'clsx'
 import { xor } from 'lodash'
 import Image from 'next/image'
@@ -7,7 +8,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { MdAddCircle } from 'react-icons/md'
-import { TextAreaField, TextField } from '../atoms'
+import { Select, TextAreaField, TextField } from '../atoms'
 import { Modal } from '../moleculers'
 const tabs = [
   {
@@ -27,41 +28,29 @@ const tabs = [
     name: 'Quần'
   }
 ]
-const colors = [
-  '#025464',
-  '#E57C23',
-  '#F8F1F1',
-  '#9CA777',
-  '#7C9070',
-  '#263A29',
-  '#000000',
-  '#E96479',
-  '#B99B6B',
-  '#E4C988'
-]
+
 const sizes = ['S', 'M', 'L', 'XL', 'XXL', 'OV']
-const catDetails = {
-  QD: 'Quần Dài',
-  QN: 'Quần Short',
-  AK: 'Áo Khoác',
-  AT: 'Áo Thun'
-}
+
 interface ProductProps {
-  stateStore: UseFormReturn<any, any>
+  stateStore: UseFormReturn<StateProductPageType, any>
   dataForm: UseFormReturn<ProductType, any>
   addProduct: (data: ProductType) => void
   editProduct: (data: ProductType) => void
   previewImageNew: (data: FileList, name: string) => void
+  deleteData: (id: string) => void
 }
 const Product: React.FC<ProductProps> = ({
   dataForm,
   stateStore,
   addProduct,
   previewImageNew,
-  editProduct
+  editProduct,
+  deleteData
 }) => {
   const tab = useSearchParams().get('tab')
-
+  const CATEGORIES = stateStore.getValues('categories')?.reduce((list, item) => {
+    return { ...list, [item.code]: item.name }
+  }, {})
   const handleSubmit = (data) => {
     if (stateStore.getValues('isEdit')) {
       editProduct(data)
@@ -93,7 +82,10 @@ const Product: React.FC<ProductProps> = ({
           <button
             type="button"
             className="w-fit inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-            onClick={() => stateStore.setValue('isModal', true)}
+            onClick={() => {
+              stateStore.setValue('isModal', true)
+              stateStore.setValue('isEdit', false)
+            }}
           >
             <label className="hidden md:block"> Tạo sản phẩm</label>
             <label className="block md:hidden">
@@ -103,11 +95,11 @@ const Product: React.FC<ProductProps> = ({
         </div>
       </div>
       <div className="flex-1 w-full rounded-lg overflow-x-auto pb-12">
-        <div className="flex justify-center gap-5 items-start flex-wrap h-[440px]">
+        <div className="flex justify-center gap-5 items-start flex-wrap h-[380px]">
           <Controller
             name="products"
             control={stateStore.control}
-            defaultValue={false}
+            defaultValue={[]}
             render={({ field }) => (
               <>
                 {[...field.value].map((item) => (
@@ -130,62 +122,40 @@ const Product: React.FC<ProductProps> = ({
                         {item.name}
                       </p>
                       <p className="w-fit p-2 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
-                        Thể loại: {catDetails[item.category]}
+                        Thể loại: {CATEGORIES[item.category]}
                       </p>
                     </div>
 
-                    <div className="w-full text-white text-sm flex-1 flex items-start justify-between gap-2">
-                      <p className="text-white bg-red-600 font-medium rounded-lg text-xs px-4 py-2">
-                        Giá: {Number(item.price)?.toLocaleString()}
+                    <div className="w-full text-white text-lg flex-1 flex items-start justify-between gap-2 px-2">
+                      <p className="text-black font-medium rounded-lg text-xs flex-1">
+                        Giá: {(Number(item.price) * 1000)?.toLocaleString()}
                       </p>
-                      <div className="flex flex-1 flex-wrap justify-end gap-1">
-                        <div className="flex flex-1 flex-wrap gap-1">
-                          {colors.map(
-                            (color) =>
-                              item.colors?.includes(color) && (
-                                <p
-                                  key={color}
-                                  className={clsx(`w-4 h-4 rounded-full border-2`, {
-                                    'border-black': item.colors?.includes(color),
-                                    'bg-[#025464]': color === '#025464',
-                                    'bg-[#E57C23]': color === '#E57C23',
-                                    'bg-[#F8F1F1]': color === '#F8F1F1',
-                                    'bg-[#9CA777]': color === '#9CA777',
-                                    'bg-[#7C9070]': color === '#7C9070',
-                                    'bg-[#263A29]': color === '#263A29',
-                                    'bg-[#000000]': color === '#000000',
-                                    'bg-[#E96479]': color === '#E96479',
-                                    'bg-[#B99B6B]': color === '#B99B6B',
-                                    'bg-[#E4C988]': color === '#E4C988'
-                                  })}
-                                />
-                              )
-                          )}
+                      <div className="w-full text-white text-sm flex-1 flex items-start justify-between gap-2">
+                        <div className="flex gap-1 flex-1 flex-wrap justify-start">
+                          {[...item.sizes].map((item, index) => (
+                            <p
+                              key={item + index}
+                              className={clsx(
+                                'w-6 h-6 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-[9px]'
+                              )}
+                            >
+                              {item}
+                            </p>
+                          ))}
                         </div>
                       </div>
                     </div>
-                    <div className="w-full text-white text-sm flex-1 flex items-start justify-between gap-2">
-                      <div className="flex gap-1 flex-1 flex-wrap justify-start">
-                        {[...item.sizes].map((item, index) => (
-                          <p
-                            key={item + index}
-                            className={clsx(
-                              'w-6 h-6 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-[9px]'
-                            )}
-                          >
-                            {item}
-                          </p>
-                        ))}
-                      </div>
+                    <div className="flex items-center gap-1">
                       <button
                         type="button"
-                        className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
+                        className="flex-1 items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
+                        onClick={() => stateStore.setValue('isDelete', item.id)}
                       >
                         Xóa
                       </button>
                       <button
                         type="button"
-                        className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+                        className="flex-1 items-center  py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
                         onClick={() => {
                           const names: Array<keyof ProductType> = [
                             'id',
@@ -193,7 +163,6 @@ const Product: React.FC<ProductProps> = ({
                             'imageName',
                             'sizes',
                             'price',
-                            'colors',
                             'highlights',
                             'quantity',
                             'details',
@@ -241,7 +210,10 @@ const Product: React.FC<ProductProps> = ({
             isOpen={field.value}
             title="Tạo sản phẩm"
           >
-            <form className="space-y-6 h-full" onSubmit={dataForm.handleSubmit(handleSubmit)}>
+            <form
+              className="space-y-6 h-full"
+              onSubmit={dataForm.handleSubmit(handleSubmit, (error) => console.log(error))}
+            >
               <div className="flex flex-col md:flex-row">
                 <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4 p-4 !min-h-[300px] relative ">
                   <label
@@ -474,7 +446,7 @@ const Product: React.FC<ProductProps> = ({
                   </label>
                 </div>
                 <div className="flex-[1.5] flex flex-col md:flex-row gap-2 items-start ">
-                  <div className="flex flex-col flex-1  gap-2 w-full">
+                  <div className="flex flex-col flex-1  gap-3 w-full">
                     <div>
                       <Controller
                         name="name"
@@ -505,7 +477,7 @@ const Product: React.FC<ProductProps> = ({
                         )}
                       />
                     </div>
-                    <div>
+                    <div className="relative">
                       <label
                         htmlFor="number"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -517,62 +489,34 @@ const Product: React.FC<ProductProps> = ({
                         name="sizes"
                         defaultValue={[]}
                         control={dataForm.control}
-                        render={({ field: { value, onChange } }) => (
-                          <div className="flex gap-1">
-                            {sizes.map((item) => (
-                              <p
-                                key={item}
-                                className={clsx(
-                                  'w-7 h-7 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-xs',
-                                  {
-                                    'border-blue-500': value?.includes(item)
-                                  }
-                                )}
-                                onClick={() => onChange(xor(value, [item]))}
-                              >
-                                {item}
+                        render={({ field: { value, onChange }, fieldState: { error } }) => (
+                          <>
+                            <div className="flex gap-1">
+                              {sizes.map((item) => (
+                                <p
+                                  key={item}
+                                  className={clsx(
+                                    'w-7 h-7 rounded-md border-2 cursor-pointer border-black flex items-center text-black justify-center font-bold text-xs',
+                                    {
+                                      'border-blue-500': value?.includes(item)
+                                    }
+                                  )}
+                                  onClick={() => onChange(xor(value, [item]))}
+                                >
+                                  {item}
+                                </p>
+                              ))}
+                            </div>
+                            {!!error?.message && (
+                              <p className="text-red-400 text-[10px] absolute bottom-0 translate-y-4">
+                                {error?.message}
                               </p>
-                            ))}
-                          </div>
+                            )}
+                          </>
                         )}
                       />
                     </div>
-                    <div>
-                      <label
-                        htmlFor="number"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Phân loại
-                      </label>
-                      <Controller
-                        name="colors"
-                        defaultValue={[]}
-                        control={dataForm.control}
-                        render={({ field: { value, onChange } }) => (
-                          <div className="flex gap-1">
-                            {colors.map((item) => (
-                              <p
-                                key={item}
-                                className={clsx(`w-6 h-6 rounded-full border-2`, {
-                                  'border-black': value?.includes(item),
-                                  'bg-[#025464]': item === '#025464',
-                                  'bg-[#E57C23]': item === '#E57C23',
-                                  'bg-[#F8F1F1]': item === '#F8F1F1',
-                                  'bg-[#9CA777]': item === '#9CA777',
-                                  'bg-[#7C9070]': item === '#7C9070',
-                                  'bg-[#263A29]': item === '#263A29',
-                                  'bg-[#000000]': item === '#000000',
-                                  'bg-[#E96479]': item === '#E96479',
-                                  'bg-[#B99B6B]': item === '#B99B6B',
-                                  'bg-[#E4C988]': item === '#E4C988'
-                                })}
-                                onClick={() => onChange(xor(value, [item]))}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      />
-                    </div>
+
                     <div>
                       <Controller
                         name="price"
@@ -605,33 +549,47 @@ const Product: React.FC<ProductProps> = ({
                         )}
                       />
                     </div>
-                  </div>
-                  <div className="flex flex-col gap-2 flex-1 w-full">
                     <div>
                       <Controller
-                        name="category"
+                        name="categories"
+                        control={stateStore.control}
+                        defaultValue={[]}
+                        render={({ field: { value: opts } }) => (
+                          <Controller
+                            name="category"
+                            control={dataForm.control}
+                            defaultValue=""
+                            render={({ field, fieldState }) => (
+                              <Select
+                                {...field}
+                                title="Phân loại"
+                                options={opts.map((item) => ({
+                                  label: item.name,
+                                  value: item.code
+                                }))}
+                                errors={fieldState.error}
+                                required
+                              />
+                            )}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3 flex-1 w-full">
+                    <div>
+                      <Controller
+                        name="descriptions"
                         control={dataForm.control}
                         defaultValue=""
-                        render={({ field }) => (
-                          <div>
-                            <label
-                              htmlFor="category"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Thuộc loại
-                            </label>
-                            <select
-                              {...field}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
-                              <option value="">Chọn loại</option>
-                              <option value="AT">Áo Thun</option>
-                              <option value="AC">Áo Croptop</option>
-                              <option value="AK">Áo khoác</option>
-                              <option value="QD">Quần Dài</option>
-                              <option value="QN">Quần Short</option>
-                            </select>
-                          </div>
+                        render={({ field, fieldState }) => (
+                          <TextAreaField
+                            title="Mô tả"
+                            {...field}
+                            rows={6}
+                            errors={fieldState.error}
+                            required
+                          />
                         )}
                       />
                     </div>
@@ -644,7 +602,7 @@ const Product: React.FC<ProductProps> = ({
                           <TextAreaField
                             title="Chi tiết sản phẩm"
                             {...field}
-                            rows={6}
+                            rows={4}
                             errors={fieldState.error}
                             required
                           />
@@ -660,7 +618,7 @@ const Product: React.FC<ProductProps> = ({
                           <TextAreaField
                             title="Nổi bật"
                             {...field}
-                            rows={6}
+                            rows={4}
                             errors={fieldState.error}
                             required
                           />
@@ -673,12 +631,46 @@ const Product: React.FC<ProductProps> = ({
               <div className="flex justify-between gap-1">
                 <button
                   type="submit"
-                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-cente"
+                  className="w-full max-w-xs m-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-cente"
                 >
                   {!stateStore.getValues('isEdit') ? 'Tạo' : 'Cập nhật'}
                 </button>
               </div>
             </form>
+          </Modal>
+        )}
+      />
+
+      <Controller
+        name="isDelete"
+        control={stateStore.control}
+        defaultValue=""
+        render={({ field }) => (
+          <Modal
+            size="md"
+            handleClose={() => {
+              stateStore.setValue('isDelete', '')
+            }}
+            isOpen={!!field.value}
+            title="Bạn có chắn chắn xóa sản phẩm này?"
+          >
+            <div className="flex justify-between gap-5">
+              <button
+                className="w-full max-w-xs m-auto text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                onClick={() => stateStore.setValue('isDelete', '')}
+              >
+                Không
+              </button>
+              <button
+                className="w-full max-w-xs m-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                onClick={() => {
+                  deleteData(field.value)
+                  stateStore.setValue('isDelete', '')
+                }}
+              >
+                Xác nhận
+              </button>
+            </div>
           </Modal>
         )}
       />

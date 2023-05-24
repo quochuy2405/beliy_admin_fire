@@ -66,11 +66,15 @@ const update = async (collectionRef: any, id: string, data: object) => {
   await updateDoc(doc(collectionRef, id), data)
 }
 
-// Delete a document
-const deleteItem = async (collectionRef: any, id: string) => {
-  await deleteDoc(doc(db, collectionRef, id))
+const deleteItem = async (collectionName: string, id: string) => {
+  try {
+    await deleteDoc(doc(db, collectionName, id))
+    console.log('Document deleted successfully.')
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
-
 const addImage = async (file: File, path: string): Promise<string> => {
   const storageRef = ref(storage, path)
   const snapshot = await uploadBytes(storageRef, file)

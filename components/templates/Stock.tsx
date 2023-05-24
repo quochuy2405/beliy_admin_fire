@@ -1,5 +1,6 @@
 'use client'
 import { StockCreateType, StockType } from '@/types/stocks'
+import { StateStockPageType } from 'app/admin/stock/page'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,26 +9,9 @@ import { Controller, UseFormReturn } from 'react-hook-form'
 import { MdAddCircle } from 'react-icons/md'
 import { TextField } from '../atoms'
 import { Modal } from '../moleculers'
-const tabs = [
-  {
-    key: 'all',
-    name: 'Tất cả sản phẩm'
-  },
-  {
-    key: 'top',
-    name: 'Áo Thun'
-  },
-  {
-    key: 'jacket',
-    name: 'Áo Khoác'
-  },
-  {
-    key: 'bot',
-    name: 'Quần'
-  }
-]
+
 interface StockProps {
-  stateStore: UseFormReturn<any, any>
+  stateStore: UseFormReturn<StateStockPageType, any>
   editForm: UseFormReturn<StockType, any>
   createForm: UseFormReturn<StockCreateType, any>
   editStock: (data: StockType) => void
@@ -123,7 +107,7 @@ const Stock: React.FC<StockProps> = ({
               size="md"
             >
               <form className="space-y-6" onSubmit={createForm.handleSubmit(addStock)}>
-                <div>
+                <div className="flex flex-col gap-3">
                   <Controller
                     name="code"
                     defaultValue=""
@@ -156,19 +140,37 @@ const Stock: React.FC<StockProps> = ({
       <div className="flex gap-4 bg-white rounded-lg overflow-hidden p-2">
         <div className="bg-white flex w-full text-sm font-medium text-center text-gray-500 border-b border-gray-200">
           <ul className="flex flex-wrap -mb-px">
-            {tabs.map((item) => (
-              <li className="mr-2" key={item.key}>
-                <Link
-                  href={`/admin/stock?tab=${item.key}`}
-                  className={clsx('inline-block p-4  rounded-t-l', {
-                    'active text-blue-600 border-b-2 border-blue-600':
-                      tab === item.key || (!tab && item.key === 'all')
-                  })}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
+            <Controller
+              name="categories"
+              defaultValue={[]}
+              control={stateStore.control}
+              render={({ field }) => (
+                <>
+                  <li className="mr-2" key={'all'}>
+                    <Link
+                      href={`/admin/stock?tab=${'all'}`}
+                      className={clsx('inline-block p-4  rounded-t-l', {
+                        'active text-blue-600 border-b-2 border-blue-600': !tab || tab === 'all'
+                      })}
+                    >
+                      Tất cả
+                    </Link>
+                  </li>
+                  {field.value.map((item) => (
+                    <li className="mr-2" key={item.code}>
+                      <Link
+                        href={`/admin/stock?tab=${item.code}`}
+                        className={clsx('inline-block p-4  rounded-t-l', {
+                          'active text-blue-600 border-b-2 border-blue-600': tab === item.code
+                        })}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </>
+              )}
+            />
           </ul>
 
           <div className="flex-1 pr-4 h-full flex-wrap flex justify-end items-center gap-2">
@@ -190,7 +192,7 @@ const Stock: React.FC<StockProps> = ({
                     >
                       <Controller
                         name="stockOpt"
-                        defaultValue={false}
+                        defaultValue={[]}
                         control={stateStore.control}
                         render={({ field }) => (
                           <>
@@ -229,15 +231,15 @@ const Stock: React.FC<StockProps> = ({
               <>
                 {field.value.map((item) => (
                   <div
-                    key={item.imageURL}
+                    key={item.id}
                     className="w-full bg-white rounded-lg h-72 flex flex-col p-4 gap-2 m-auto"
                   >
                     <div className="w-full h-[85%]">
                       <Image
                         src={item.imageURL || 'https://www.freeiconspng.com/img/23494'}
                         unoptimized
-                        width={10}
-                        height={100}
+                        width={1000}
+                        height={1000}
                         alt=""
                         className="w-full h-full object-cover"
                       />

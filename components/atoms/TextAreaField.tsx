@@ -13,7 +13,7 @@ interface TextAreaFieldProps extends React.TextareaHTMLAttributes<HTMLTextAreaEl
 const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(
   ({ title, errors = {}, required = false, ...props }, ref) => {
     return (
-      <>
+      <div className="relative">
         <label
           htmlFor="name"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -30,7 +30,7 @@ const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(
             {errors?.message}
           </p>
         )}
-      </>
+      </div>
     )
   }
 )

@@ -6,4 +6,9 @@ export type StockType = {
   id?: string
 }
 
-export type StockCreateType = { code: string; name: string }
+export type StockCreateType = { id: string; code: string; name: string; caterory: string }
+export type CategoriesType = {
+  id: string
+  name: string
+  code: string
+}

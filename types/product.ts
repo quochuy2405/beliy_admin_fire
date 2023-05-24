@@ -3,11 +3,12 @@ export type ProductType = {
   name: string
   imageName: string
   sizes: Array<string>
-  imageURL?: string
+  imagesURL?: Array<string>
   price: number
-  colors: Array<string>
+  productFor: string
   quantity: number
   highlights: string
+  descriptions: string
   details: string
   category: string
 }

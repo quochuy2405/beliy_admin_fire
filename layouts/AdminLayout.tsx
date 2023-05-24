@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { FaMoneyCheckAlt } from 'react-icons/fa'
 import { GiClothes } from 'react-icons/gi'
 import {
+  MdCategory,
   MdInventory,
   MdOutlineLocalActivity,
   MdPersonSearch,
@@ -28,6 +29,13 @@ const USERS = [
       <GiClothes size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
     ),
     title: 'Quản lý sản phẩm'
+  },
+  {
+    key: '/admin/categories',
+    icon: (active) => (
+      <MdCategory size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
+    title: 'Quản lý phân loại'
   },
   {
     key: '/admin/account_managers',
@@ -58,7 +66,14 @@ const POCS = [
     icon: (active) => (
       <FaMoneyCheckAlt size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
     ),
-    title: 'Thông kê công nợ'
+    title: 'Thông kê sản phẩm bán chạy'
+  },
+  {
+    key: '/admin/expense_profit',
+    icon: (active) => (
+      <FaMoneyCheckAlt size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
+    title: 'Thông kê chi phí - lợi nhuận'
   },
   {
     key: '/admin/discount',

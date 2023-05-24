@@ -97,3 +97,66 @@ export const columnTableInvoiceManagers = (): ColumnDef<any, any>[] => {
     }
   ]
 }
+export const columnTableExpense = (): ColumnDef<any, any>[] => {
+  return [
+    {
+      header: 'TÊN USER',
+      accessorKey: 'username',
+      size: 120
+    },
+    {
+      header: 'TÊN ĐẦY ĐỦ',
+      accessorKey: 'fullName',
+      size: 120
+    },
+    {
+      header: 'KHU VỰC',
+      accessorKey: 'region',
+      size: 90
+    },
+    {
+      header: 'TỈNH THÀNH',
+      accessorKey: 'addressCityProvince',
+      size: 120
+    },
+    {
+      header: 'SỐ ĐIỆN THOẠI',
+      accessorKey: 'phoneNumber',
+      size: 120
+    }
+  ]
+}
+interface ColumnTableCategoriesProps {
+  deleteData: (id: string) => void
+}
+export const columnTableCategories = ({
+  deleteData
+}: ColumnTableCategoriesProps): ColumnDef<any, any>[] => {
+  return [
+    {
+      header: 'Mã phân loại',
+      accessorKey: 'code',
+      size: 120
+    },
+    {
+      header: 'Tên phân loại',
+      accessorKey: 'name',
+      size: 120
+    },
+
+    {
+      header: 'Xóa',
+      accessorKey: 'delete',
+      size: 90,
+      cell: ({ row: { original } }) => (
+        <button
+          type="button"
+          onClick={() => deleteData(original?.id)}
+          className="flex-1 items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
+        >
+          Xóa
+        </button>
+      )
+    }
+  ]
+}
