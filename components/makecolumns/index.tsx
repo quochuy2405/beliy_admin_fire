@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
+import clsx from 'clsx'
 import { MdOutlineMode } from 'react-icons/md'
 
 export const columnTableAccountManagers = (openModel): ColumnDef<any, any>[] => {
@@ -44,32 +45,41 @@ export const columnTableAccountManagers = (openModel): ColumnDef<any, any>[] => 
     }
   ]
 }
-
+// addressNumber: string
+// award: string
+// checkoutId: string
+// district: string
+// email: string
+// name: string
 export const columnTableInvoiceManagers = (): ColumnDef<any, any>[] => {
   return [
     {
-      header: 'TÊN USER',
-      accessorKey: 'username',
+      header: 'Mã đơn hàng',
+      accessorKey: 'checkoutId',
       size: 120
     },
     {
       header: 'TÊN ĐẦY ĐỦ',
-      accessorKey: 'fullName',
+      accessorKey: 'name',
       size: 120
     },
     {
-      header: 'KHU VỰC',
-      accessorKey: 'region',
-      size: 90
-    },
-    {
-      header: 'TỈNH THÀNH',
-      accessorKey: 'addressCityProvince',
-      size: 120
+      header: 'Địa chỉ',
+      accessorKey: 'address',
+      size: 90,
+      cell: ({ row: { original } }) => {
+        const address = [
+          original.addressNumber,
+          original.award,
+          original.district,
+          original.province
+        ]
+        return <p>{address.join(',')}</p>
+      }
     },
     {
       header: 'SỐ ĐIỆN THOẠI',
-      accessorKey: 'phoneNumber',
+      accessorKey: 'phone',
       size: 120
     },
     {
@@ -77,8 +87,16 @@ export const columnTableInvoiceManagers = (): ColumnDef<any, any>[] => {
       accessorKey: 'status',
       size: 120,
       cell: (info) => (
-        <p className="inline-flex items-center py-1.5 px-3 text-xs font-medium text-center text-white bg-blue-700 rounded-full focus:ring-4 focus:ring-blue-200 hover:bg-blue-800">
-          {info?.getValue()}
+        <p
+          className={clsx(
+            'inline-flex items-center py-1.5 px-3 text-xs font-medium text-center rounded-full text-white',
+            {
+              'bg-blue-700': !info?.getValue(),
+              'bg-emerald-400': info?.getValue()
+            }
+          )}
+        >
+          {!info?.getValue() ? 'Đang chờ thanh toán' : 'Đã thanh toán'}
         </p>
       )
     },

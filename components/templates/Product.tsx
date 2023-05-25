@@ -167,7 +167,8 @@ const Product: React.FC<ProductProps> = ({
                             'quantity',
                             'details',
                             'category',
-                            'descriptions'
+                            'descriptions',
+                            'gender'
                           ]
                           names.forEach((name) => {
                             dataForm.setValue(name, item[name])
@@ -578,6 +579,35 @@ const Product: React.FC<ProductProps> = ({
                     </div>
                   </div>
                   <div className="flex flex-col gap-3 flex-1 w-full">
+                    <div>
+                      <Controller
+                        name="gender"
+                        control={dataForm.control}
+                        defaultValue=""
+                        render={({ field, fieldState }) => (
+                          <Select
+                            {...field}
+                            title="Giới tính"
+                            options={[
+                              {
+                                label: 'Nữ',
+                                value: 'women'
+                              },
+                              {
+                                label: 'Nam',
+                                value: 'men'
+                              },
+                              {
+                                label: 'Cả 2',
+                                value: 'all'
+                              }
+                            ]}
+                            errors={fieldState.error}
+                            required
+                          />
+                        )}
+                      />
+                    </div>
                     <div>
                       <Controller
                         name="descriptions"

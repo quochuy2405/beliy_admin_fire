@@ -104,7 +104,8 @@ const ProductPage = () => {
       highlights,
       details,
       quantity,
-      imageName
+      imageName,
+      gender
     } = data
 
     const productRef = collection(db, 'products')
@@ -117,7 +118,8 @@ const ProductPage = () => {
       highlights,
       descriptions,
       details,
-      quantity
+      quantity,
+      gender
     })
       .then(async () => {
         const folder = imageName

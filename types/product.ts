@@ -11,4 +11,5 @@ export type ProductType = {
   descriptions: string
   details: string
   category: string
+  gender: string
 }

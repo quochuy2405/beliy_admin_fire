@@ -2,38 +2,40 @@
 
 import { columnTableInvoiceManagers } from '@/components/makecolumns'
 import { InvoiceManagers } from '@/components/templates'
-
+import { readAll } from '@/firebase/base'
+import { db } from '@/firebase/config'
+import { ProductType } from '@/types/product'
+import { collection } from 'firebase/firestore'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+type DataSetType = {
+  addressNumber: string
+  award: string
+  checkoutId: string
+  district: string
+  email: string
+  name: string
+  products: Array<ProductType>
+}
+export type StateInvoiceManagersPageType = {
+  datasets: Array<DataSetType>
+}
 const InvoiceManagersPage = () => {
   const columns = columnTableInvoiceManagers()
-  const datasets = [
-    {
-      username: 'huy2121',
-      fullName: 'Bùi Quốc Huy',
-      region: 'Ho Chi Minh',
-      addressCityProvince: 'Ho Chi Minh',
-      phoneNumber: '093282783239',
-      status: 'Đang giao'
-    },
-    {
-      username: 'huy2121',
-      fullName: 'Bùi Quốc Huy',
-      region: 'Ho Chi Minh',
-      addressCityProvince: 'Ho Chi Minh',
-      phoneNumber: '093282783239',
-      status: 'Đang giao'
-    },
-    {
-      username: 'huy2121',
-      fullName: 'Bùi Quốc Huy',
-      region: 'Ho Chi Minh',
-      addressCityProvince: 'Ho Chi Minh',
-      phoneNumber: '093282783239',
-      status: 'Đang giao'
+  const stateStore = useForm<StateInvoiceManagersPageType>({
+    defaultValues: {
+      datasets: []
     }
-  ]
+  })
+  useEffect(() => {
+    const ordersRef = collection(db, 'orders')
+    readAll(ordersRef).then((data) => {
+      stateStore.setValue('datasets', data)
+    })
+  }, [])
   const props = {
     columns,
-    datasets
+    stateStore
   }
 
   return <InvoiceManagers {...props} />

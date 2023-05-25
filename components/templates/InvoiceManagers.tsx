@@ -1,10 +1,21 @@
 'use client'
+import { ColumnDef } from '@tanstack/react-table'
+import { StateInvoiceManagersPageType } from 'app/admin/invoice_managers/page'
+import { Controller, UseFormReturn } from 'react-hook-form'
 import { Table } from '../atoms'
-
-const InvoiceManagers = ({ columns, datasets }) => {
+interface InvoiceManagersProps {
+  stateStore: UseFormReturn<StateInvoiceManagersPageType, any>
+  columns: ColumnDef<any, any>[]
+}
+const InvoiceManagers: React.FC<InvoiceManagersProps> = ({ columns, stateStore }) => {
   return (
     <div className="flex flex-col w-full h-full gap-2">
-      <Table columns={columns} data={datasets} />
+      <Controller
+        name="datasets"
+        control={stateStore.control}
+        defaultValue={[]}
+        render={({ field }) => <Table columns={columns} data={field.value} />}
+      />
     </div>
   )
 }
