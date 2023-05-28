@@ -7,14 +7,18 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc
 } from 'firebase/firestore'
 import { ref, uploadBytes } from 'firebase/storage'
 import { db, storage } from './config'
+import { orderBy } from 'lodash'
 
 // Create a new document
 const create = async (collectionRef: any, data: object) => {
-  const docRef = await addDoc(collectionRef, data)
+  const createdAt = new Date().toISOString()
+  const newData = { ...data, createdAt }
+  const docRef = await addDoc(collectionRef, newData)
   return docRef.id
 }
 // Read a single document
@@ -50,17 +54,33 @@ const findAll = async <T>(collectionRef: any, conditions: Condition<T>[]): Promi
   })
   return data
 }
+const deleteItemByField = async (collectionName, fieldName, fieldValue) => {
+  try {
+    const collectionRef = collection(db, collectionName)
+    const querySnapshot = await getDocs(collectionRef)
 
+    querySnapshot.forEach((doc) => {
+      const docData = doc.data()
+      if (docData[fieldName] === fieldValue) {
+        deleteDoc(doc.ref)
+        console.log('Document deleted successfully.')
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
 // Read all documents in a collection
-const readAll = async (collectionRef: any) => {
-  const querySnapshot = await getDocs(collectionRef)
+const readAll = async (collectionRef) => {
+  const q = query(collectionRef, orderBy('createdAt', 'asc') as any)
+  const querySnapshot = await getDocs(q)
   const documents = []
-  querySnapshot.docs.forEach((doc: any) => {
-    documents.push({ id: doc.id, ...doc.data() })
+  querySnapshot.forEach((doc) => {
+    documents.push({ id: doc.id, ...(doc.data() as any) })
   })
   return documents
 }
-
 // Update a document
 const update = async (collectionRef: any, id: string, data: object) => {
   await updateDoc(doc(collectionRef, id), data)
@@ -81,4 +101,4 @@ const addImage = async (file: File, path: string): Promise<string> => {
   return snapshot.metadata.fullPath
 }
 
-export { create, deleteItem, read, readAll, update, addImage, findAll }
+export { create, deleteItem, read, readAll, update, addImage, findAll, deleteItemByField }

@@ -1,6 +1,6 @@
 'use client'
 import { Product } from '@/components/templates'
-import { addImage, create, deleteItem, readAll, update } from '@/firebase/base'
+import { addImage, create, deleteItem, deleteItemByField, readAll, update } from '@/firebase/base'
 import { db, storage } from '@/firebase/config'
 import { schema } from '@/resolvers/product'
 import { ProductType } from '@/types/product'
@@ -11,6 +11,7 @@ import { getDownloadURL, ref } from 'firebase/storage'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+
 export type StateProductPageType = {
   products: Array<ProductType>
   isModal: boolean
@@ -65,7 +66,7 @@ const ProductPage = () => {
     const productsRef = collection(db, 'products')
 
     await create(productsRef, data)
-      .then(async () => {
+      .then(async (id) => {
         // If a new image is selected, upload it to the storage
         const folder = data.imageName
           .trim()
@@ -74,8 +75,9 @@ const ProductPage = () => {
           .toLocaleLowerCase()
           .replace(/\s/g, '_')
 
-        await images.forEach(async (image, index) => {
-          await addImage(image[index + 1], 'products/' + folder + '/' + (index + 1).toString())
+        await images.forEach(async (image) => {
+          const [key, value] = Object.entries(image)[0]
+          await addImage(value as File, 'products/' + folder + '/' + key)
         })
 
         enqueueSnackbar('Thêm sản phẩm thành công', { variant: 'success' })
@@ -83,7 +85,8 @@ const ProductPage = () => {
         await create(stocksRef, {
           category: data.category,
           quantity: 0,
-          imageName: data.imageName
+          imageName: data.imageName,
+          prod_id: id
         })
         setRefresh((cur) => !cur)
       })
@@ -130,7 +133,7 @@ const ProductPage = () => {
           .replace(/\s/g, '_')
 
         const images = stateStore.getValues('fileImageNews')
-        console.log('first', images)
+
         await images.forEach(async (image) => {
           const [key, value] = Object.entries(image)[0]
           await addImage(value as File, 'products/' + folder + '/' + key)
@@ -218,7 +221,8 @@ const ProductPage = () => {
   const deleteData = async (id: string) => {
     if (id) {
       await deleteItem('products', id)
-        .then(() => {
+        .then(async () => {
+          await deleteItemByField('initStock', 'prod_id', id)
           enqueueSnackbar('Đã xóa thành công', { variant: 'success' })
           setRefresh((cur) => !cur)
         })

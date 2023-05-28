@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import clsx from 'clsx'
-import { MdOutlineMode } from 'react-icons/md'
+import { FaEye } from 'react-icons/fa'
+import { MdDelete, MdOutlineMode, MdPayment } from 'react-icons/md'
 
 export const columnTableAccountManagers = (openModel): ColumnDef<any, any>[] => {
   return [
@@ -56,7 +57,7 @@ export const columnTableInvoiceManagers = (): ColumnDef<any, any>[] => {
     {
       header: 'Mã đơn hàng',
       accessorKey: 'checkoutId',
-      size: 120
+      size: 80
     },
     {
       header: 'TÊN ĐẦY ĐỦ',
@@ -66,7 +67,7 @@ export const columnTableInvoiceManagers = (): ColumnDef<any, any>[] => {
     {
       header: 'Địa chỉ',
       accessorKey: 'address',
-      size: 90,
+      size: 190,
       cell: ({ row: { original } }) => {
         const address = [
           original.addressNumber,
@@ -103,14 +104,28 @@ export const columnTableInvoiceManagers = (): ColumnDef<any, any>[] => {
     {
       header: 'TUỲ CHỌN',
       accessorKey: 'actions',
-      size: 124,
+      size: 204,
       cell: () => (
-        <button
-          type="button"
-          className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-        >
-          <MdOutlineMode size={18} />
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+          >
+            <FaEye size={18} />
+          </button>
+          <button
+            type="button"
+            className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-emerald-500 rounded-lg focus:ring-4 focus:ring-ebg-emerald-500 hover:bg-emerald-700"
+          >
+            <MdPayment size={18} />
+          </button>
+          <button
+            type="button"
+            className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
+          >
+            <MdDelete size={18} />
+          </button>
+        </div>
       )
     }
   ]

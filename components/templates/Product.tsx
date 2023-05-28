@@ -10,24 +10,6 @@ import { Controller, UseFormReturn } from 'react-hook-form'
 import { MdAddCircle } from 'react-icons/md'
 import { Select, TextAreaField, TextField } from '../atoms'
 import { Modal } from '../moleculers'
-const tabs = [
-  {
-    key: 'all',
-    name: 'Tất cả sản phẩm'
-  },
-  {
-    key: 'top',
-    name: 'Áo Thun'
-  },
-  {
-    key: 'jacket',
-    name: 'Áo Khoác'
-  },
-  {
-    key: 'bot',
-    name: 'Quần'
-  }
-]
 
 const sizes = ['S', 'M', 'L', 'XL', 'XXL', 'OV']
 
@@ -63,19 +45,37 @@ const Product: React.FC<ProductProps> = ({
       <div className="flex gap-4 bg-white rounded-lg overflow-hidden p-2">
         <div className="bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200">
           <ul className="flex flex-wrap -mb-px">
-            {tabs.map((item) => (
-              <li className="mr-2" key={item.key}>
-                <Link
-                  href={`/admin/products?tab=${item.key}`}
-                  className={clsx('inline-block p-4  rounded-t-l', {
-                    'active text-blue-600 border-b-2 border-blue-600':
-                      tab === item.key || (!tab && item.key === 'all')
-                  })}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
+            <Controller
+              name="categories"
+              defaultValue={[]}
+              control={stateStore.control}
+              render={({ field }) => (
+                <>
+                  <li className="mr-2" key={'all'}>
+                    <Link
+                      href={`/admin/stock?tab=${'all'}`}
+                      className={clsx('inline-block p-4  rounded-t-l', {
+                        'active text-blue-600 border-b-2 border-blue-600': !tab || tab === 'all'
+                      })}
+                    >
+                      Tất cả
+                    </Link>
+                  </li>
+                  {field.value.map((item) => (
+                    <li className="mr-2" key={item.code}>
+                      <Link
+                        href={`/admin/stock?tab=${item.code}`}
+                        className={clsx('inline-block p-4  rounded-t-l', {
+                          'active text-blue-600 border-b-2 border-blue-600': tab === item.code
+                        })}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </>
+              )}
+            />
           </ul>
         </div>
         <div className="flex-1 pr-4 h-full flex justify-end items-center">
