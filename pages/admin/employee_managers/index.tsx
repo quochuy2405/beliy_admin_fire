@@ -2,12 +2,14 @@
 
 import { columnTableEmployeeManagers } from '@/components/makecolumns'
 import { EmployeeManagers } from '@/components/templates'
-import { create, deleteItem, readAll } from '@/firebase/base'
+import { create, deleteItem, findAll, readAll } from '@/firebase/base'
 import { db } from '@/firebase/config'
+import AdminLayout from '@/layouts/AdminLayout'
 import { closeLoading, setLoading } from '@/redux/features/slices/loading'
 import { EmployeeType } from '@/types/employee'
 import { collection } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { ReactElement, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 export type StateEmployeeManagersType = {
@@ -16,7 +18,7 @@ export type StateEmployeeManagersType = {
 }
 const EmployeeManagersPage = () => {
   const [refresh, setRefresh] = useState(false)
-
+  const role = useSearchParams().get('role')
   const onRefresh = () => {
     setRefresh((cur) => !cur)
   }
@@ -64,13 +66,22 @@ const EmployeeManagersPage = () => {
   }
 
   useEffect(() => {
-    dispatch(setLoading({ status: true }))
     const employeeRef = collection(db, 'employees')
-    readAll(employeeRef).then((data) => {
-      stateStore.setValue('employees', data)
-      dispatch(closeLoading())
-    })
-  }, [refresh])
+    if (role) {
+      console.log(role)
+      findAll(employeeRef, [['position', role as any]]).then((data) => {
+        stateStore.setValue('employees', data as any)
+        dispatch(closeLoading())
+      })
+    } else {
+      dispatch(setLoading({ status: true }))
+
+      readAll(employeeRef).then((data) => {
+        stateStore.setValue('employees', data)
+        dispatch(closeLoading())
+      })
+    }
+  }, [refresh, role])
 
   const props = {
     columns,
@@ -81,5 +92,7 @@ const EmployeeManagersPage = () => {
 
   return <EmployeeManagers {...props} />
 }
-
+EmployeeManagersPage.getLayout = function getLayout(page: ReactElement) {
+  return <AdminLayout>{page}</AdminLayout>
+}
 export default EmployeeManagersPage

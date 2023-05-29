@@ -2,6 +2,7 @@
 import { Stock } from '@/components/templates'
 import { create, read, readAll, update } from '@/firebase/base'
 import { db, storage } from '@/firebase/config'
+import AdminLayout from '@/layouts/AdminLayout'
 import { schema } from '@/resolvers/stock_categories'
 import { CategoriesType, StockCreateType, StockType } from '@/types/stocks'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -9,7 +10,7 @@ import { OptionType } from 'common'
 import { collection } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { useSnackbar } from 'notistack'
-import { useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 export type StateStockPageType = {
   isEdit: boolean
@@ -177,5 +178,7 @@ const StockPage = () => {
 
   return <Stock {...props} />
 }
-
+StockPage.getLayout = function getLayout(page: ReactElement) {
+  return <AdminLayout>{page}</AdminLayout>
+}
 export default StockPage

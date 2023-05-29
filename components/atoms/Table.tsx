@@ -1,27 +1,81 @@
 'use client'
 import {
   ColumnDef,
+  ExpandedState,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   useReactTable
 } from '@tanstack/react-table'
 import clsx from 'clsx'
-import { memo } from 'react'
+import { memo, useEffect, useState } from 'react'
+import TextField from './TextField'
 
 interface TableProps {
   data: Array<object>
   columns: ColumnDef<any, any>[]
   className?: string
+  powerplus?: boolean
 }
 
-const Table: React.FC<TableProps> = ({ data, columns, className }) => {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel()
-  })
+const defaultColumn: Partial<any> = {
+  cell: ({ getValue, row: { index }, column: { id }, table }) => {
+    const initialValue = getValue()
+    // We need to keep and update the state of the cell normally
+    const [value, setValue] = useState(initialValue)
+
+    // When the input is blurred, we'll call our table meta's updateData function
+    const onBlur = () => {
+      table.options.meta?.updateData(index, id, value)
+    }
+
+    // If the initialValue is changed external, sync it up with our state
+    useEffect(() => {
+      setValue(initialValue)
+    }, [initialValue])
+
+    return (
+      <TextField
+        name={index.toLocaleString()}
+        value={value as string}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={onBlur}
+      />
+    )
+  }
+}
+
+const Table: React.FC<TableProps> = ({ data, columns, className, powerplus }) => {
+  const [expanded, setExpanded] = useState<ExpandedState>({})
+  const table = useReactTable(
+    powerplus
+      ? {
+          data,
+          columns,
+          defaultColumn,
+          state: {
+            expanded
+          },
+          getSubRows: (row) => row.subRows,
+          onExpandedChange: setExpanded,
+          getCoreRowModel: getCoreRowModel(),
+          getExpandedRowModel: getExpandedRowModel(),
+          getFilteredRowModel: getFilteredRowModel()
+        }
+      : {
+          data,
+          columns,
+          state: {
+            expanded
+          },
+          getSubRows: (row) => row.subRows,
+          onExpandedChange: setExpanded,
+          getCoreRowModel: getCoreRowModel(),
+          getExpandedRowModel: getExpandedRowModel(),
+          getFilteredRowModel: getFilteredRowModel()
+        }
+  )
 
   const classNames = clsx('w-full text-sm text-left text-gray-500 rounded-lg overflow-hidden', {
     'h-full': !table?.getRowModel().rows.length,

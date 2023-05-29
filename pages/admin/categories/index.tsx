@@ -4,12 +4,13 @@ import { Categories } from '@/components/templates'
 import { deleteItem } from '@/firebase/base'
 import { create, readAll } from '@/firebase/base'
 import { db } from '@/firebase/config'
+import AdminLayout from '@/layouts/AdminLayout'
 import { schema } from '@/resolvers/stock_categories'
 import { CategoriesType } from '@/types/stocks'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { collection } from 'firebase/firestore'
 import { enqueueSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 const CategoriesPage = () => {
@@ -71,5 +72,7 @@ const CategoriesPage = () => {
   }
   return <Categories {...props} />
 }
-
+CategoriesPage.getLayout = function getLayout(page: ReactElement) {
+  return <AdminLayout>{page}</AdminLayout>
+}
 export default CategoriesPage

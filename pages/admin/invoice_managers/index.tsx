@@ -4,10 +4,11 @@ import { columnTableInvoiceManagers } from '@/components/makecolumns'
 import { InvoiceManagers } from '@/components/templates'
 import { readAll } from '@/firebase/base'
 import { db } from '@/firebase/config'
+import AdminLayout from '@/layouts/AdminLayout'
 import { closeLoading, setLoading } from '@/redux/features/slices/loading'
 import { ProductType } from '@/types/product'
 import { collection } from 'firebase/firestore'
-import { useEffect, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 type DataSetType = {
@@ -51,5 +52,7 @@ const InvoiceManagersPage = () => {
 
   return <InvoiceManagers {...props} />
 }
-
+InvoiceManagersPage.getLayout = function getLayout(page: ReactElement) {
+  return <AdminLayout>{page}</AdminLayout>
+}
 export default InvoiceManagersPage

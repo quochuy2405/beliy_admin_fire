@@ -1,13 +1,14 @@
+import { update } from '@/firebase/base'
+import { db } from '@/firebase/config'
 import { ColumnDef } from '@tanstack/react-table'
 import clsx from 'clsx'
+import { collection } from 'firebase/firestore'
+import Link from 'next/link'
+import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
 import { FaEye } from 'react-icons/fa'
 import { MdDelete, MdOutlineMode, MdPayment } from 'react-icons/md'
 import { TbTruckDelivery } from 'react-icons/tb'
 import Checkbox from '../atoms/Checkbox/Checkbox'
-import Link from 'next/link'
-import { update } from '@/firebase/base'
-import { collection } from 'firebase/firestore'
-import { db } from '@/firebase/config'
 export const columnTableAccountManagers = (openModel): ColumnDef<any, any>[] => {
   return [
     {
@@ -104,7 +105,7 @@ export const columnTableInvoiceManagers = ({
             className={clsx(
               'w-8 h-8  opacity-25 items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800',
               {
-                'opacity-100': info.getValue() === 'payment_on_delivery'
+                '!opacity-100': info.getValue() === 'payment_on_delivery'
               }
             )}
           >
@@ -115,7 +116,7 @@ export const columnTableInvoiceManagers = ({
             className={clsx(
               'w-8 h-8  opacity-25 py-2 px-2 flex gap-1 justify-center items-center text-sm rounded-md font-medium text-blue-50 bg-[#cc2684]',
               {
-                'opacity-100': info.getValue() === 'momo'
+                '!opacity-100': info.getValue() === 'momo'
               }
             )}
           >
@@ -137,7 +138,7 @@ export const columnTableInvoiceManagers = ({
             className={clsx(
               'inline-flex opacity-25 items-center py-2 px-2 text-xs font-medium text-center text-white bg-emerald-500 rounded-lg focus:ring-4 focus:ring-ebg-emerald-500 hover:bg-emerald-700',
               {
-                'opacity-100': info.getValue() === 'banking'
+                '!opacity-100': info.getValue() === 'banking'
               }
             )}
           >
@@ -228,35 +229,78 @@ export const columnTableInvoiceManagers = ({
     }
   ]
 }
-export const columnTableExpense = (): ColumnDef<any, any>[] => {
-  return [
-    {
-      header: 'TÊN USER',
-      accessorKey: 'username',
-      size: 120
-    },
-    {
-      header: 'TÊN ĐẦY ĐỦ',
-      accessorKey: 'fullName',
-      size: 120
-    },
-    {
-      header: 'KHU VỰC',
-      accessorKey: 'region',
-      size: 90
-    },
-    {
-      header: 'TỈNH THÀNH',
-      accessorKey: 'addressCityProvince',
-      size: 120
-    },
-    {
-      header: 'SỐ ĐIỆN THOẠI',
-      accessorKey: 'phoneNumber',
-      size: 120
-    }
-  ]
-}
+export const columnTableExpense = (): ColumnDef<any, any>[] => [
+  {
+    accessorKey: 'firstName',
+    header: ({ table }) => (
+      <>
+        <button
+          className="mr-2"
+          {...{
+            onClick: table.getToggleAllRowsExpandedHandler()
+          }}
+        >
+          {table.getIsAllRowsExpanded() ? (
+            <AiFillPlusCircle size={15} color="black" />
+          ) : (
+            <AiFillMinusCircle size={15} color="black" />
+          )}
+        </button>
+        Tên chí phí
+      </>
+    ),
+    cell: ({ row, getValue }) => (
+      <div
+        style={{
+          paddingLeft: `${row.depth * 2}rem`
+        }}
+      >
+        {row.getCanExpand() ? (
+          <button
+            className="mr-2"
+            {...{
+              onClick: row.getToggleExpandedHandler(),
+              style: { cursor: 'pointer' }
+            }}
+          >
+            {row.getIsExpanded() ? (
+              <AiFillPlusCircle size={15} color="black" />
+            ) : (
+              <AiFillMinusCircle size={15} color="black" />
+            )}
+          </button>
+        ) : (
+          <></>
+        )}
+        {getValue()}
+      </div>
+    ),
+    footer: (props) => props.column.id
+  },
+  {
+    accessorFn: (row) => row.lastName,
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => <span>Thuộc tính chi phí</span>,
+    footer: (props) => props.column.id
+  },
+  {
+    accessorKey: 'visits',
+    header: () => <span>Giá trị</span>,
+    footer: (props) => props.column.id
+  },
+  {
+    accessorKey: 'status',
+    header: 'Số lượng',
+    footer: (props) => props.column.id
+  },
+  {
+    accessorKey: 'progress',
+    header: 'Hiện có',
+    footer: (props) => props.column.id
+  }
+]
+
 interface ColumnTableCategoriesProps {
   deleteData: (id: string) => void
 }

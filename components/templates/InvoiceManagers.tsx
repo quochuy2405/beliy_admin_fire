@@ -1,8 +1,8 @@
 'use client'
 import { ColumnDef } from '@tanstack/react-table'
-import { StateInvoiceManagersPageType } from 'app/admin/invoice_managers/page'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { Table } from '../atoms'
+import { StateInvoiceManagersPageType } from '@/pages/admin/invoice_managers'
 interface InvoiceManagersProps {
   stateStore: UseFormReturn<StateInvoiceManagersPageType, any>
   columns: ColumnDef<any, any>[]

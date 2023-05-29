@@ -10,6 +10,7 @@ import {
   update
 } from '@/firebase/base'
 import { db, storage } from '@/firebase/config'
+import AdminLayout from '@/layouts/AdminLayout'
 import { schema } from '@/resolvers/product'
 import { ProductType } from '@/types/product'
 import { CategoriesType } from '@/types/stocks'
@@ -18,7 +19,7 @@ import { collection } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { useSearchParams } from 'next/navigation'
 import { useSnackbar } from 'notistack'
-import { useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 export type StateProductPageType = {
@@ -210,7 +211,7 @@ const ProductPage = () => {
     stateStore.resetField('isModal')
 
     const productRef = collection(db, 'products')
-
+    console.log(tab)
     ;(tab === 'all' || !tab ? readAll(productRef) : findAll(productRef, [['category', tab]])).then(
       async (res) => {
         const products = res.map(async (item) => {
@@ -258,5 +259,7 @@ const ProductPage = () => {
   }
   return <Product {...props} />
 }
-
+ProductPage.getLayout = function getLayout(page: ReactElement) {
+  return <AdminLayout>{page}</AdminLayout>
+}
 export default ProductPage

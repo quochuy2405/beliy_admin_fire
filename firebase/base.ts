@@ -45,14 +45,14 @@ const findAll = async <T>(collectionRef: any, conditions: Condition<T>[]): Promi
       if (
         conditions.every((condition) => {
           const [key, value] = condition
-          return Array.isArray(value) ? value.includes(item[key]) : item[key] === value
+          return Array.isArray(value) ? value.includes(item[key]) : item[key] === (value as any)
         })
       ) {
         data.push(item)
       }
     }
   })
-  return data as any
+  return data
 }
 const deleteItemByField = async (collectionName, fieldName, fieldValue) => {
   try {

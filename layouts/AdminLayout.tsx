@@ -3,11 +3,12 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { FaMoneyCheckAlt } from 'react-icons/fa'
+import { FaMoneyBill, FaMoneyCheckAlt } from 'react-icons/fa'
 import { GiClothes } from 'react-icons/gi'
 import {
   MdCategory,
   MdInventory,
+  MdManageAccounts,
   MdOutlineLocalActivity,
   MdPersonSearch,
   MdSupervisorAccount
@@ -41,9 +42,16 @@ const USERS = [
   {
     key: '/admin/account_managers',
     icon: (active) => (
-      <MdSupervisorAccount size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+      <MdManageAccounts size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
     ),
     title: 'Quản lý tài khoản'
+  },
+  {
+    key: '/admin/account_customers',
+    icon: (active) => (
+      <MdSupervisorAccount size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+    ),
+    title: 'Quản lý khách hàng'
   },
   {
     key: '/admin/invoice_managers',
@@ -72,7 +80,7 @@ const POCS = [
   {
     key: '/admin/expense_profit',
     icon: (active) => (
-      <FaMoneyCheckAlt size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+      <FaMoneyBill size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
     ),
     title: 'Thông kê chi phí - lợi nhuận'
   },
@@ -97,7 +105,7 @@ const AdminLayout = ({ children }) => {
       <LoadingPopUp />
       <input id="hamburger" type="checkbox" className="hidden" defaultChecked />
       <header className="z-10 bg-white border-b-[1px] h-14 min-h-[56px] flex items-center justify-between px-6">
-        <Link href="/admin" className="h-16 w-16 md:block hidden " passHref>
+        <Link href="/admin" className="h-24 w-24 md:block hidden " passHref>
           <div className="bg-[url('/logo.png')] bg-cover bg-no-repeat w-full h-full" />
         </Link>
 

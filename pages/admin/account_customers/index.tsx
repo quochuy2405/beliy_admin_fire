@@ -1,41 +1,42 @@
 'use client'
 
 import { columnTableAccountManagers } from '@/components/makecolumns'
-import { AccountManagers } from '@/components/templates'
+import AccountCustomers from '@/components/templates/AccountCustomers'
 import { create, deleteItem, readAll } from '@/firebase/base'
 import { db } from '@/firebase/config'
+import AdminLayout from '@/layouts/AdminLayout'
 import { closeLoading, setLoading } from '@/redux/features/slices/loading'
 import { AccountType } from '@/types/account'
 import { collection } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
-export type StateAccountManagersType = {
-  accounts: Array<AccountType>
+export type StateAccountCustomersType = {
+  customers: Array<AccountType>
   isModal: boolean
 }
-const AccountManagersPage = () => {
+const AccountCustomersPage = () => {
   const [refresh, setRefresh] = useState(false)
 
   const onRefresh = () => {
     setRefresh((cur) => !cur)
   }
   const onDelete = (id: string) => {
-    deleteItem('employees', id)
+    deleteItem('customers', id)
     onRefresh()
   }
   const columns = columnTableAccountManagers({ onDelete })
   const dispatch = useDispatch()
-  const stateStore = useForm<StateAccountManagersType>({
+  const stateStore = useForm<StateAccountCustomersType>({
     defaultValues: {
       isModal: false,
-      accounts: []
+      customers: []
     }
   })
   const dataForm = useForm<AccountType>()
   const addAccount = (data: AccountType) => {
     dispatch(setLoading({ status: true, mode: 'default', title: 'Đang tạo nhân viên...' }))
-    const accountRef = collection(db, 'accounts')
+    const accountRef = collection(db, 'customers')
     create(accountRef, data).then(() => {
       dataForm.reset()
       dispatch(
@@ -65,9 +66,9 @@ const AccountManagersPage = () => {
 
   useEffect(() => {
     dispatch(setLoading({ status: true }))
-    const accountRef = collection(db, 'accounts')
+    const accountRef = collection(db, 'customers')
     readAll(accountRef).then((data) => {
-      stateStore.setValue('accounts', data)
+      stateStore.setValue('customers', data)
       dispatch(closeLoading())
     })
   }, [refresh])
@@ -79,7 +80,9 @@ const AccountManagersPage = () => {
     addAccount
   }
 
-  return <AccountManagers {...props} />
+  return <AccountCustomers {...props} />
 }
-
-export default AccountManagersPage
+AccountCustomersPage.getLayout = function getLayout(page: ReactElement) {
+  return <AdminLayout>{page}</AdminLayout>
+}
+export default AccountCustomersPage
