@@ -8,7 +8,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { OptionType } from 'common'
 import { collection } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
-import { useSearchParams } from 'next/navigation'
 import { useSnackbar } from 'notistack'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -23,7 +22,7 @@ export type StateStockPageType = {
 }
 const StockPage = () => {
   const { enqueueSnackbar } = useSnackbar()
-  const tab = useSearchParams().get('tab')
+
   const [refresh, setRefresh] = useState(false)
   const stockRef = useRef<Array<StockType>>([])
   const stateStore = useForm<StateStockPageType>({
@@ -166,18 +165,6 @@ const StockPage = () => {
       }
     })
   }
-
-  useEffect(() => {
-    if (!tab || tab === 'all') {
-      console.log(stockRef.current)
-      stateStore.setValue('stocks', stockRef.current)
-    } else {
-      stateStore.setValue(
-        'stocks',
-        stockRef.current.filter((item) => item.category === tab)
-      )
-    }
-  }, [tab])
 
   const props = {
     stateStore,

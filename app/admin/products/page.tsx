@@ -1,6 +1,14 @@
 'use client'
 import { Product } from '@/components/templates'
-import { addImage, create, deleteItem, deleteItemByField, readAll, update } from '@/firebase/base'
+import {
+  addImage,
+  create,
+  deleteItem,
+  deleteItemByField,
+  findAll,
+  readAll,
+  update
+} from '@/firebase/base'
 import { db, storage } from '@/firebase/config'
 import { schema } from '@/resolvers/product'
 import { ProductType } from '@/types/product'
@@ -8,8 +16,9 @@ import { CategoriesType } from '@/types/stocks'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { collection } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
+import { useSearchParams } from 'next/navigation'
 import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 export type StateProductPageType = {
@@ -24,6 +33,8 @@ export type StateProductPageType = {
 const ProductPage = () => {
   const { enqueueSnackbar } = useSnackbar()
   const [refresh, setRefresh] = useState(false)
+  const tab = useSearchParams().get('tab') as any
+  const productsRef = useRef<Array<ProductType>>([])
   const stateStore = useForm<StateProductPageType>({
     defaultValues: {
       products: [],
@@ -166,10 +177,25 @@ const ProductPage = () => {
       reader.readAsDataURL(file)
     }
   }
+
+  const deleteData = async (id: string) => {
+    if (id) {
+      await deleteItem('products', id)
+        .then(async () => {
+          await deleteItemByField('initStock', 'prod_id', id)
+          enqueueSnackbar('Đã xóa thành công', { variant: 'success' })
+          setRefresh((cur) => !cur)
+        })
+        .catch(() => {
+          enqueueSnackbar('Lỗi', { variant: 'error' })
+        })
+    }
+  }
   useEffect(() => {
     const categoriesRef = collection(db, 'categories')
     readAll(categoriesRef)
       .then((data) => {
+        productsRef.current = data
         stateStore.setValue('categories', data)
       })
       .catch((error) => console.log(error))
@@ -184,53 +210,44 @@ const ProductPage = () => {
     stateStore.resetField('isModal')
 
     const productRef = collection(db, 'products')
-    readAll(productRef).then(async (res) => {
-      const products = res.map(async (item) => {
-        const names = [1, 2, 3, 4]
-        try {
-        } catch (error) {}
-        const imagesURL = names.map(async (name) => {
+
+    ;(tab === 'all' || !tab ? readAll(productRef) : findAll(productRef, [['category', tab]])).then(
+      async (res) => {
+        const products = res.map(async (item) => {
+          const names = [1, 2, 3, 4]
           try {
-            const imageRef = ref(
-              storage,
-              'products/' +
-                item.imageName
-                  .trim()
-                  .normalize('NFD')
-                  .replace(/[\u0300-\u036f]/g, '')
-                  .toLocaleLowerCase()
-                  .replace(/\s/g, '_') +
-                '/' +
-                name
-            )
-            const imageURL = await getDownloadURL(imageRef)
-            return imageURL
-          } catch (error) {
-            return ''
+          } catch (error) {}
+          const imagesURL = names.map(async (name) => {
+            try {
+              const imageRef = ref(
+                storage,
+                'products/' +
+                  item.imageName
+                    .trim()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLocaleLowerCase()
+                    .replace(/\s/g, '_') +
+                  '/' +
+                  name
+              )
+              const imageURL = await getDownloadURL(imageRef)
+              return imageURL
+            } catch (error) {
+              return ''
+            }
+          })
+
+          return {
+            ...item,
+            imagesURL: await Promise.all(imagesURL)
           }
         })
+        stateStore.setValue('products', await Promise.all(products))
+      }
+    )
+  }, [refresh, tab])
 
-        return {
-          ...item,
-          imagesURL: await Promise.all(imagesURL)
-        }
-      })
-      stateStore.setValue('products', await Promise.all(products))
-    })
-  }, [refresh])
-  const deleteData = async (id: string) => {
-    if (id) {
-      await deleteItem('products', id)
-        .then(async () => {
-          await deleteItemByField('initStock', 'prod_id', id)
-          enqueueSnackbar('Đã xóa thành công', { variant: 'success' })
-          setRefresh((cur) => !cur)
-        })
-        .catch(() => {
-          enqueueSnackbar('Lỗi', { variant: 'error' })
-        })
-    }
-  }
   const props = {
     stateStore,
     dataForm,

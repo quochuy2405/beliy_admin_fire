@@ -1,10 +1,7 @@
 'use client'
 import { StockCreateType, StockType } from '@/types/stocks'
 import { StateStockPageType } from 'app/admin/stock/page'
-import clsx from 'clsx'
 import Image from 'next/image'
-import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { MdAddCircle } from 'react-icons/md'
 import { TextField } from '../atoms'
@@ -27,8 +24,6 @@ const Stock: React.FC<StockProps> = ({
   editStock,
   onChangeSelect
 }) => {
-  const tab = useSearchParams().get('tab')
-
   return (
     <div className="flex flex-col w-full h-full gap-2">
       <Controller
@@ -138,41 +133,7 @@ const Stock: React.FC<StockProps> = ({
         }}
       />
       <div className="flex gap-4 bg-white rounded-lg overflow-hidden p-2">
-        <div className="bg-white flex w-full text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-          <ul className="flex flex-wrap -mb-px">
-            <Controller
-              name="categories"
-              defaultValue={[]}
-              control={stateStore.control}
-              render={({ field }) => (
-                <>
-                  <li className="mr-2" key={'all'}>
-                    <Link
-                      href={`/admin/stock?tab=${'all'}`}
-                      className={clsx('inline-block p-4  rounded-t-l', {
-                        'active text-blue-600 border-b-2 border-blue-600': !tab || tab === 'all'
-                      })}
-                    >
-                      Tất cả
-                    </Link>
-                  </li>
-                  {field.value.map((item) => (
-                    <li className="mr-2" key={item.code}>
-                      <Link
-                        href={`/admin/stock?tab=${item.code}`}
-                        className={clsx('inline-block p-4  rounded-t-l', {
-                          'active text-blue-600 border-b-2 border-blue-600': tab === item.code
-                        })}
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </>
-              )}
-            />
-          </ul>
-
+        <div className="bg-white flex w-full text-sm font-medium text-center text-gray-500">
           <div className="flex-1 pr-4 h-full flex-wrap flex justify-end items-center gap-2">
             <div className="min-w-[120px]">
               <Controller
@@ -198,7 +159,9 @@ const Stock: React.FC<StockProps> = ({
                           <>
                             <option value="">Chọn kho</option>
                             {field.value.map((opt) => (
-                              <option value={opt.value}>{opt.label}</option>
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
                             ))}
                           </>
                         )}

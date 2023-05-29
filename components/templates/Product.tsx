@@ -53,7 +53,7 @@ const Product: React.FC<ProductProps> = ({
                 <>
                   <li className="mr-2" key={'all'}>
                     <Link
-                      href={`/admin/stock?tab=${'all'}`}
+                      href={`/admin/products?tab=${'all'}`}
                       className={clsx('inline-block p-4  rounded-t-l', {
                         'active text-blue-600 border-b-2 border-blue-600': !tab || tab === 'all'
                       })}
@@ -64,7 +64,7 @@ const Product: React.FC<ProductProps> = ({
                   {field.value.map((item) => (
                     <li className="mr-2" key={item.code}>
                       <Link
-                        href={`/admin/stock?tab=${item.code}`}
+                        href={`/admin/products?tab=${item.code}`}
                         className={clsx('inline-block p-4  rounded-t-l', {
                           'active text-blue-600 border-b-2 border-blue-600': tab === item.code
                         })}
@@ -104,12 +104,12 @@ const Product: React.FC<ProductProps> = ({
               <>
                 {[...field.value].map((item) => (
                   <div
-                    key={item?.imagesURL[0]}
+                    key={item?.imagesURL?.[0]}
                     className="w-[90%] min-w-[270px] md:max-w-[280px] md:w-[33.333%] lg:w-[25%] bg-white rounded-lg flex flex-col p-4 gap-2 shadow-lg h-full flex-1"
                   >
                     <div className="w-full h-[240px] relative overflow-hidden">
                       <Image
-                        src={item.imagesURL[0] || 'https://www.freeiconspng.com/img/23494'}
+                        src={item?.imagesURL?.[0] || 'https://www.freeiconspng.com/img/23494'}
                         unoptimized
                         width={10}
                         height={100}

@@ -15,6 +15,7 @@ import {
 
 import { RiBillFill } from 'react-icons/ri'
 import { HiHome } from 'react-icons/hi'
+import { LoadingPopUp } from '@/components/moleculers'
 const USERS = [
   {
     key: '/admin/stock',
@@ -93,6 +94,7 @@ const AdminLayout = ({ children }) => {
   return (
     <div className="flex flex-col h-screen bg-gray-50 overflow-hidden">
       {/* <!-- Desktop sidebar --> */}
+      <LoadingPopUp />
       <input id="hamburger" type="checkbox" className="hidden" defaultChecked />
       <header className="z-10 bg-white border-b-[1px] h-14 min-h-[56px] flex items-center justify-between px-6">
         <Link href="/admin" className="h-16 w-16 md:block hidden " passHref>

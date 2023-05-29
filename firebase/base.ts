@@ -52,7 +52,7 @@ const findAll = async <T>(collectionRef: any, conditions: Condition<T>[]): Promi
       }
     }
   })
-  return data
+  return data as any
 }
 const deleteItemByField = async (collectionName, fieldName, fieldValue) => {
   try {
