@@ -1,6 +1,6 @@
 'use client'
 
-import { columnTableAccountManagers } from '@/components/makecolumns'
+import { columnTableEmployeeManagers } from '@/components/makecolumns'
 import { EmployeeManagers } from '@/components/templates'
 import { create, deleteItem, readAll } from '@/firebase/base'
 import { db } from '@/firebase/config'
@@ -24,7 +24,7 @@ const EmployeeManagersPage = () => {
     deleteItem('employees', id)
     onRefresh()
   }
-  const columns = columnTableAccountManagers({ onDelete })
+  const columns = columnTableEmployeeManagers({ onDelete })
   const dispatch = useDispatch()
   const stateStore = useForm<StateEmployeeManagersType>({
     defaultValues: {
