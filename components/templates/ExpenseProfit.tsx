@@ -17,14 +17,24 @@ const tabs = [
 
 interface ExpenseProfitProps {
   stateStore: UseFormReturn<any, any>
-  // dataForm: UseFormReturn<ExpenseProfitType, any>
+  dataForm: UseFormReturn<any, any>
+  handleSubmit: (data: any) => void
   tab: string
   columns: ColumnDef<any, any>[]
 }
-const ExpenseProfit: React.FC<ExpenseProfitProps> = ({ columns, stateStore, tab }) => {
+const ExpenseProfit: React.FC<ExpenseProfitProps> = ({
+  columns,
+  stateStore,
+  dataForm,
+  tab,
+  handleSubmit
+}) => {
   return (
     <div className="flex flex-col w-full h-full gap-2">
-      <div className="flex gap-4 bg-white rounded-lg overflow-hidden">
+      <form
+        onSubmit={dataForm.handleSubmit(handleSubmit)}
+        className="flex gap-4 bg-white rounded-lg overflow-hidden"
+      >
         <div className="bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 flex justify-between w-full p-2">
           <ul className="flex flex-wrap -mb-px">
             {tabs.map((item) => (
@@ -43,19 +53,21 @@ const ExpenseProfit: React.FC<ExpenseProfitProps> = ({ columns, stateStore, tab 
           </ul>
 
           <button
-            type="button"
+            type="submit"
             className="items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-gray-500 hover:text-white"
           >
             Cập nhật bảng
           </button>
         </div>
-      </div>
+      </form>
       <div className="flex-1 w-full rounded-lg overflow-x-auto pb-12">
         {tab === 'expense' && (
           <Controller
             name="accounts"
             control={stateStore.control}
-            render={({ field }) => <Table columns={columns} data={field.value} powerplus />}
+            render={({ field }) => (
+              <Table columns={columns} data={field.value} control={dataForm.control} powerplus />
+            )}
           />
         )}
       </div>

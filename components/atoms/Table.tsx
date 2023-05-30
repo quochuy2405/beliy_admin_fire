@@ -10,6 +10,7 @@ import {
 } from '@tanstack/react-table'
 import clsx from 'clsx'
 import { memo, useEffect, useState } from 'react'
+import { Control, Controller } from 'react-hook-form'
 import TextField from './TextField'
 
 interface TableProps {
@@ -17,46 +18,46 @@ interface TableProps {
   columns: ColumnDef<any, any>[]
   className?: string
   powerplus?: boolean
+  control?: Control<any>
 }
-
-const defaultColumn: Partial<any> = {
-  cell: ({ getValue, row: { index }, column: { id }, table }) => {
+export const defaultColumn: any = (control: Control<any>) => ({
+  cell: ({ getValue, row: { index, id: rowid }, column: { id, columnDef }, table }) => {
     const initialValue = getValue()
-    // We need to keep and update the state of the cell normally
     const [value, setValue] = useState(initialValue)
 
-    // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
       table.options.meta?.updateData(index, id, value)
     }
 
-    // If the initialValue is changed external, sync it up with our state
     useEffect(() => {
       setValue(initialValue)
     }, [initialValue])
 
     return (
-      <TextField
-        name={index.toLocaleString()}
-        value={value as string}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={onBlur}
+      <Controller
+        name={`${rowid}.${columnDef.accessorKey}`}
+        defaultValue={value}
+        control={control}
+        render={({ field }) => <TextField {...field} onBlur={onBlur} />}
       />
     )
   }
-}
+})
 
-const Table: React.FC<TableProps> = ({ data, columns, className, powerplus }) => {
+const Table: React.FC<TableProps> = ({ data, columns, className, powerplus, control }) => {
   const [expanded, setExpanded] = useState<ExpandedState>({})
+  const defaultColumnConfig = defaultColumn(control)
   const table = useReactTable(
     powerplus
       ? {
           data,
           columns,
-          defaultColumn,
+          defaultColumn: defaultColumnConfig,
+
           state: {
             expanded
           },
+
           getSubRows: (row) => row.subRows,
           onExpandedChange: setExpanded,
           getCoreRowModel: getCoreRowModel(),
@@ -76,7 +77,6 @@ const Table: React.FC<TableProps> = ({ data, columns, className, powerplus }) =>
           getFilteredRowModel: getFilteredRowModel()
         }
   )
-
   const classNames = clsx('w-full text-sm text-left text-gray-500 rounded-lg overflow-hidden', {
     'h-full': !table?.getRowModel().rows.length,
     [className]: !!className
