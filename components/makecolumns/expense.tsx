@@ -1,7 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
-
-export const columnTableExpense = (): ColumnDef<any, any>[] => [
+import { MdAdd, MdDelete } from 'react-icons/md'
+interface ColumnTableExpenseProps {
+  handleOpenModel: (id: string) => void
+}
+export const columnTableExpense = ({
+  handleOpenModel
+}: ColumnTableExpenseProps): ColumnDef<any, any>[] => [
   {
     accessorKey: 'nameCol',
     header: ({ table }) => (
@@ -21,21 +26,21 @@ export const columnTableExpense = (): ColumnDef<any, any>[] => [
         Kế hoạch
       </>
     ),
-    cell: ({ row, getValue }) => (
+    cell: (info) => (
       <div
         style={{
-          paddingLeft: `${row.depth * 2}rem`
+          paddingLeft: `${info?.row.depth * 2}rem`
         }}
       >
-        {row.getCanExpand() ? (
+        {info?.row.getCanExpand() ? (
           <button
             className="mr-2"
             {...{
-              onClick: row.getToggleExpandedHandler(),
+              onClick: info?.row.getToggleExpandedHandler(),
               style: { cursor: 'pointer' }
             }}
           >
-            {row.getIsExpanded() ? (
+            {info?.row.getIsExpanded() ? (
               <AiFillPlusCircle size={15} color="black" />
             ) : (
               <AiFillMinusCircle size={15} color="black" />
@@ -44,7 +49,7 @@ export const columnTableExpense = (): ColumnDef<any, any>[] => [
         ) : (
           <></>
         )}
-        {getValue()}
+        {info?.getValue?.()}
       </div>
     ),
     size: 340,
@@ -112,8 +117,45 @@ export const columnTableExpense = (): ColumnDef<any, any>[] => [
     footer: (props) => props.column.id
   },
   {
-    accessorKey: 'total',
+    accessorKey: '',
     header: 'Tổng',
+    cell: ({ row: { original } }) => {
+      const total = Object.entries(original).reduce((sum: number, [key, value]) => {
+        if (value && !['nameCol', 'subRows', 'id'].includes(key)) return sum + Number(value)
+        return sum
+      }, 0)
+      console.log(total)
+      return (
+        <div className="flex p-2 items-center">
+          {Number.isInteger(Number(total)) ? (
+            <p className="text-base">{Number(total)}</p>
+          ) : (
+            <p className="text-red-500">Lỗi</p>
+          )}
+        </div>
+      )
+    }
+  },
+  {
+    accessorKey: 'actions',
+    header: '',
+    cell: ({ row: { original } }) => (
+      <div className="flex gap-1 items-center h-full justify-center">
+        <button
+          type="button"
+          onClick={() => handleOpenModel(original.id)}
+          className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+        >
+          <MdAdd size={13} />
+        </button>
+        <button
+          type="button"
+          className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-red-600"
+        >
+          <MdDelete size={13} />
+        </button>
+      </div>
+    ),
     footer: (props) => props.column.id
   }
 ]

@@ -8,6 +8,7 @@ import {
   getDoc,
   getDocs,
   query,
+  setDoc,
   updateDoc
 } from 'firebase/firestore'
 import { ref, uploadBytes } from 'firebase/storage'
@@ -20,6 +21,18 @@ const create = async (collectionRef: any, data: object) => {
   const newData = { ...data, createdAt }
   const docRef = await addDoc(collectionRef, newData)
   return docRef.id
+}
+const createOrReplace = async (collectionRef, data) => {
+  try {
+    const createdAt = new Date().toISOString()
+    const newData = { createdAt, ...data }
+    const docRef = doc(collectionRef)
+    await setDoc(docRef, newData)
+    return docRef.id
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
 // Read a single document
 const read = async (collectionName: string, id: string) => {
@@ -101,4 +114,14 @@ const addImage = async (file: File, path: string): Promise<string> => {
   return snapshot.metadata.fullPath
 }
 
-export { create, deleteItem, read, readAll, update, addImage, findAll, deleteItemByField }
+export {
+  create,
+  deleteItem,
+  read,
+  readAll,
+  update,
+  addImage,
+  findAll,
+  deleteItemByField,
+  createOrReplace
+}

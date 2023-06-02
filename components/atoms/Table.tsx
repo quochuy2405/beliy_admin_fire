@@ -21,7 +21,7 @@ interface TableProps {
   control?: Control<any>
 }
 export const defaultColumn: any = (control: Control<any>) => ({
-  cell: ({ getValue, row: { index, id: rowid }, column: { id, columnDef }, table }) => {
+  cell: ({ getValue, row: { index, id: rowid }, column: { id }, table }) => {
     const initialValue = getValue()
     const [value, setValue] = useState(initialValue)
 
@@ -32,10 +32,9 @@ export const defaultColumn: any = (control: Control<any>) => ({
     useEffect(() => {
       setValue(initialValue)
     }, [initialValue])
-
     return (
       <Controller
-        name={`${rowid}.${columnDef.accessorKey}`}
+        name={`${rowid.toString().replaceAll('.', '.subRows.')}.${id}`}
         defaultValue={value}
         control={control}
         render={({ field }) => <TextField {...field} onBlur={onBlur} />}
@@ -53,7 +52,6 @@ const Table: React.FC<TableProps> = ({ data, columns, className, powerplus, cont
           data,
           columns,
           defaultColumn: defaultColumnConfig,
-
           state: {
             expanded
           },
