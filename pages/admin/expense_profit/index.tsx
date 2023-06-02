@@ -55,8 +55,16 @@ const ExpenseProfitPage = () => {
       stateStore.setValue('addRow', true)
     }
   }
+  const handleDeleteRow = (id: string) => {
+    if (id) {
+      const parsedData = parseData(dataForm.getValues())
+      const updateData = removeRowById(parsedData, id)
+      stateStore.setValue('expenses', updateData)
+      dataForm.reset(updateData)
+    }
+  }
   const dispatch = useDispatch()
-  const columns = useMemo(() => columnTableExpense({ handleOpenModel }), [])
+  const columns = useMemo(() => columnTableExpense({ handleOpenModel, handleDeleteRow }), [])
 
   const parseData = (data) => {
     const result = []
@@ -126,6 +134,17 @@ const ExpenseProfitPage = () => {
     })
   }
 
+  const removeRowById = (rows, id) => {
+    return rows.filter((row) => {
+      if (row.id === id) {
+        return false // Exclude the row with the specified ID
+      } else if (row.subRows && row.subRows.length > 0) {
+        // Recursively remove the row from subrows
+        row.subRows = removeRowById(row.subRows, id)
+      }
+      return true // Include all other rows
+    })
+  }
   const handelNewRow = (nameCol: string) => {
     const id = shortid.generate()
     return { id, ...itemNew, nameCol }

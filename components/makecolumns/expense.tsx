@@ -3,9 +3,11 @@ import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
 import { MdAdd, MdDelete } from 'react-icons/md'
 interface ColumnTableExpenseProps {
   handleOpenModel: (id: string) => void
+  handleDeleteRow: (id: string) => void
 }
 export const columnTableExpense = ({
-  handleOpenModel
+  handleOpenModel,
+  handleDeleteRow
 }: ColumnTableExpenseProps): ColumnDef<any, any>[] => [
   {
     accessorKey: 'nameCol',
@@ -150,6 +152,7 @@ export const columnTableExpense = ({
         </button>
         <button
           type="button"
+          onClick={() => handleDeleteRow(original.id)}
           className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-red-600"
         >
           <MdDelete size={13} />
