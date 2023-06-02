@@ -4,7 +4,6 @@ import { ColumnDef } from '@tanstack/react-table'
 import clsx from 'clsx'
 import { collection } from 'firebase/firestore'
 import Link from 'next/link'
-import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai'
 import { FaEye } from 'react-icons/fa'
 import { MdDelete, MdOutlineMode, MdPayment } from 'react-icons/md'
 import { TbTruckDelivery } from 'react-icons/tb'
@@ -229,77 +228,6 @@ export const columnTableInvoiceManagers = ({
     }
   ]
 }
-export const columnTableExpense = (): ColumnDef<any, any>[] => [
-  {
-    accessorKey: 'firstName',
-    header: ({ table }) => (
-      <>
-        <button
-          className="mr-2"
-          {...{
-            onClick: table.getToggleAllRowsExpandedHandler()
-          }}
-        >
-          {table.getIsAllRowsExpanded() ? (
-            <AiFillPlusCircle size={15} color="black" />
-          ) : (
-            <AiFillMinusCircle size={15} color="black" />
-          )}
-        </button>
-        Tên chí phí
-      </>
-    ),
-    cell: ({ row, getValue }) => (
-      <div
-        style={{
-          paddingLeft: `${row.depth * 2}rem`
-        }}
-      >
-        {row.getCanExpand() ? (
-          <button
-            className="mr-2"
-            {...{
-              onClick: row.getToggleExpandedHandler(),
-              style: { cursor: 'pointer' }
-            }}
-          >
-            {row.getIsExpanded() ? (
-              <AiFillPlusCircle size={15} color="black" />
-            ) : (
-              <AiFillMinusCircle size={15} color="black" />
-            )}
-          </button>
-        ) : (
-          <></>
-        )}
-        {getValue()}
-      </div>
-    ),
-    footer: (props) => props.column.id
-  },
-  {
-    accessorFn: (row) => row.lastName,
-    id: 'lastName',
-    cell: (info) => info.getValue(),
-    header: () => <span>Thuộc tính chi phí</span>,
-    footer: (props) => props.column.id
-  },
-  {
-    accessorKey: 'visits',
-    header: () => <span>Giá trị</span>,
-    footer: (props) => props.column.id
-  },
-  {
-    accessorKey: 'status',
-    header: 'Số lượng',
-    footer: (props) => props.column.id
-  },
-  {
-    accessorKey: 'progress',
-    header: 'Hiện có',
-    footer: (props) => props.column.id
-  }
-]
 
 interface ColumnTableCategoriesProps {
   deleteData: (id: string) => void

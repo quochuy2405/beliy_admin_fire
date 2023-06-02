@@ -2,11 +2,11 @@
 import { memo } from 'react'
 import { EmployeeType } from '@/types/employee'
 import { ColumnDef } from '@tanstack/react-table'
-import { StateEmployeeManagersType } from 'app/admin/employee_managers/page'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { Select, Table, TextField } from '../atoms'
 import { Modal } from '../moleculers'
 import Link from 'next/link'
+import { StateEmployeeManagersType } from '@/pages/admin/employee_managers'
 interface EmployeeManagersProps {
   stateStore: UseFormReturn<StateEmployeeManagersType, any>
   dataForm: UseFormReturn<EmployeeType, any>

@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { Table, TextField } from '../atoms'
 import { Modal } from '../moleculers'
-import { StateAccountCustomersType } from 'app/admin/account_customers/page'
+import { StateAccountCustomersType } from '@/pages/admin/account_customers'
 interface AccountCustomersProps {
   stateStore: UseFormReturn<StateAccountCustomersType, any>
   dataForm: UseFormReturn<AccountType, any>

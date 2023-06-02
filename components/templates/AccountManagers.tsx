@@ -1,11 +1,10 @@
 'use client'
 import { AccountType } from '@/types/account'
 import { ColumnDef } from '@tanstack/react-table'
-
-import { StateAccountManagersType } from 'app/admin/account_managers/page'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { Table, TextField } from '../atoms'
 import { Modal } from '../moleculers'
+import { StateAccountManagersType } from '@/pages/admin/account_managers'
 interface AccountManagersProps {
   stateStore: UseFormReturn<StateAccountManagersType, any>
   dataForm: UseFormReturn<AccountType, any>

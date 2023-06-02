@@ -58,7 +58,7 @@ const Table: React.FC<TableProps> = ({ data, columns, className, powerplus, cont
             expanded
           },
 
-          getSubRows: (row) => row.subRows,
+          getSubRows: (row) => row?.subRows,
           onExpandedChange: setExpanded,
           getCoreRowModel: getCoreRowModel(),
           getExpandedRowModel: getExpandedRowModel(),
@@ -70,21 +70,21 @@ const Table: React.FC<TableProps> = ({ data, columns, className, powerplus, cont
           state: {
             expanded
           },
-          getSubRows: (row) => row.subRows,
+          getSubRows: (row) => row?.subRows,
           onExpandedChange: setExpanded,
           getCoreRowModel: getCoreRowModel(),
           getExpandedRowModel: getExpandedRowModel(),
           getFilteredRowModel: getFilteredRowModel()
         }
   )
-  const classNames = clsx('w-full text-sm text-left text-gray-500 rounded-lg overflow-hidden', {
+  const classNames = clsx('w-full text-sm text-left text-gray-500 rounded-lg relative', {
     'h-full': !table?.getRowModel().rows.length,
     [className]: !!className
   })
 
   return (
     <table cellPadding={0} cellSpacing={0} className={classNames}>
-      <thead className="text-xs text-gray-400 uppercase bg-gray-100">
+      <thead className="text-xs text-gray-400 uppercaseflex-1 z-50">
         {table?.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id} className="mr-6">
             {headerGroup.headers.map((header) => (
@@ -94,7 +94,7 @@ const Table: React.FC<TableProps> = ({ data, columns, className, powerplus, cont
                   width: header.column.columnDef.size ? `${header.column.columnDef.size}px` : 'auto'
                 }}
                 colSpan={header.colSpan}
-                className={clsx('first:pl-6 last:pr-6 h-12 pl-1', {
+                className={clsx('first:pl-6 last:pr-6 h-12 pl-1 sticky top-0 z-50 bg-gray-100 ', {
                   'text-center': (header.column.columnDef.meta as any)?.center
                 })}
               >

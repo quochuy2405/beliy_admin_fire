@@ -63,7 +63,7 @@ const ExpenseProfit: React.FC<ExpenseProfitProps> = ({
       <div className="flex-1 w-full rounded-lg overflow-x-auto pb-12">
         {tab === 'expense' && (
           <Controller
-            name="accounts"
+            name="expenses"
             control={stateStore.control}
             render={({ field }) => (
               <Table columns={columns} data={field.value} control={dataForm.control} powerplus />

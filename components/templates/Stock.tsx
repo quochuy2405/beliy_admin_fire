@@ -1,11 +1,11 @@
 'use client'
 import { StockCreateType, StockType } from '@/types/stocks'
-import { StateStockPageType } from 'app/admin/stock/page'
 import Image from 'next/image'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { MdAddCircle } from 'react-icons/md'
 import { TextField } from '../atoms'
 import { Modal } from '../moleculers'
+import { StateStockPageType } from '@/pages/admin/stock'
 
 interface StockProps {
   stateStore: UseFormReturn<StateStockPageType, any>

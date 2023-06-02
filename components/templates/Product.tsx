@@ -1,6 +1,5 @@
 'use client'
 import { ProductType } from '@/types/product'
-import { StateProductPageType } from 'app/admin/products/page'
 import clsx from 'clsx'
 import { xor } from 'lodash'
 import Image from 'next/image'
@@ -10,6 +9,7 @@ import { Controller, UseFormReturn } from 'react-hook-form'
 import { MdAddCircle } from 'react-icons/md'
 import { Select, TextAreaField, TextField } from '../atoms'
 import { Modal } from '../moleculers'
+import { StateProductPageType } from '@/pages/admin/products'
 
 const sizes = ['S', 'M', 'L', 'XL', 'XXL', 'OV']
 
