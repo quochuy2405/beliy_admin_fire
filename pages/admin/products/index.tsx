@@ -211,7 +211,7 @@ const ProductPage = () => {
     stateStore.resetField('isModal')
 
     const productRef = collection(db, 'products')
-    console.log(tab)
+
     ;(tab === 'all' || !tab ? readAll(productRef) : findAll(productRef, [['category', tab]])).then(
       async (res) => {
         const products = res.map(async (item) => {

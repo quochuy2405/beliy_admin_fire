@@ -1,26 +1,13 @@
 'use client'
-import { StateExpenseProfitPageType } from '@/pages/admin/expense_profit'
+import { StateExpenseProfitPageType } from '@/pages/admin/expense'
 import { ColumnDef } from '@tanstack/react-table'
-import clsx from 'clsx'
-import Link from 'next/link'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { Table, TextField } from '../atoms'
 import { Modal } from '../moleculers'
-const tabs = [
-  {
-    key: 'profit',
-    name: 'Lợi nhuận'
-  },
-  {
-    key: 'expense',
-    name: 'Chi phí'
-  }
-]
 
 interface ExpenseProfitProps {
   stateStore: UseFormReturn<StateExpenseProfitPageType, any>
   dataForm: UseFormReturn<any, any>
-  tab: string
   columns: ColumnDef<any, any>[]
   handleSubmit: (data: any) => void
   handleAddRow: (data: any) => void
@@ -30,7 +17,6 @@ const ExpenseProfit: React.FC<ExpenseProfitProps> = ({
   columns,
   stateStore,
   dataForm,
-  tab,
   handleSubmit,
   handleAddRow,
   handleReset
@@ -81,7 +67,8 @@ const ExpenseProfit: React.FC<ExpenseProfitProps> = ({
         className="flex gap-4 bg-white rounded-lg overflow-hidden"
       >
         <div className="bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 flex justify-between w-full p-2">
-          <ul className="flex flex-wrap -mb-px">
+          <div className="flex-1"></div>
+          {/* <ul className="flex flex-wrap -mb-px">
             {tabs.map((item) => (
               <li className="mr-2" key={item.key}>
                 <Link
@@ -95,7 +82,7 @@ const ExpenseProfit: React.FC<ExpenseProfitProps> = ({
                 </Link>
               </li>
             ))}
-          </ul>
+          </ul> */}
           <div className="flex gap-2">
             <button
               type="button"
@@ -114,15 +101,13 @@ const ExpenseProfit: React.FC<ExpenseProfitProps> = ({
         </div>
       </form>
       <div className="flex-1 w-full rounded-lg overflow-x-auto pb-12">
-        {tab === 'expense' && (
-          <Controller
-            name="expenses"
-            control={stateStore.control}
-            render={({ field }) => (
-              <Table columns={columns} data={field.value} control={dataForm.control} powerplus />
-            )}
-          />
-        )}
+        <Controller
+          name="expenses"
+          control={stateStore.control}
+          render={({ field }) => (
+            <Table columns={columns} data={field.value} control={dataForm.control} powerplus />
+          )}
+        />
       </div>
     </div>
   )

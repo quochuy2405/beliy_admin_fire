@@ -7,7 +7,6 @@ import { db } from '@/firebase/config'
 import AdminLayout from '@/layouts/AdminLayout'
 import { closeLoading, setLoading } from '@/redux/features/slices/loading'
 import { collection } from 'firebase/firestore'
-import { useSearchParams } from 'next/navigation'
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -35,7 +34,6 @@ export type StateExpenseProfitPageType = {
 }
 
 const ExpenseProfitPage = () => {
-  const tab = useSearchParams().get('tab') as string
   const parentIdRef = useRef('')
   const idRef = useRef('')
   const dataForm = useForm({
@@ -195,7 +193,6 @@ const ExpenseProfitPage = () => {
     columns,
     stateStore,
     dataForm,
-    tab,
     handleSubmit,
     handleAddRow,
     handleReset

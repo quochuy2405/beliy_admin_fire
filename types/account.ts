@@ -1,6 +1,6 @@
 export type AccountType = {
   name: string
-  username: string
+  email: string
   password: string
   phone: string
   address: string

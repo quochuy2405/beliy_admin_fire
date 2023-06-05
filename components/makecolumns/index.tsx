@@ -5,10 +5,19 @@ import clsx from 'clsx'
 import { collection } from 'firebase/firestore'
 import Link from 'next/link'
 import { FaEye } from 'react-icons/fa'
-import { MdDelete, MdOutlineMode, MdPayment } from 'react-icons/md'
+import { IoIosPeople } from 'react-icons/io'
+import { MdAdminPanelSettings, MdDelete, MdPayment } from 'react-icons/md'
 import { TbTruckDelivery } from 'react-icons/tb'
 import Checkbox from '../atoms/Checkbox/Checkbox'
-export const columnTableAccountManagers = (openModel): ColumnDef<any, any>[] => {
+interface ColumnTableAccountManagersProps {
+  openModel?: () => void
+  onUpdate?: (id: string, role: string) => void
+  onDelete?: (id: string) => void
+}
+export const columnTableAccountManagers = ({
+  onDelete,
+  onUpdate
+}: ColumnTableAccountManagersProps): ColumnDef<any, any>[] => {
   return [
     {
       header: 'ID',
@@ -17,7 +26,7 @@ export const columnTableAccountManagers = (openModel): ColumnDef<any, any>[] => 
     },
     {
       header: 'TÊN ĐẦY ĐỦ',
-      accessorKey: 'fullName',
+      accessorKey: 'name',
       size: 120
     },
     {
@@ -27,26 +36,58 @@ export const columnTableAccountManagers = (openModel): ColumnDef<any, any>[] => 
     },
     {
       header: 'TỈNH THÀNH',
-      accessorKey: 'addressCityProvince',
-      size: 120
+      accessorKey: 'address',
+      size: 160
     },
     {
       header: 'SỐ ĐIỆN THOẠI',
-      accessorKey: 'phoneNumber',
+      accessorKey: 'phone',
       size: 120
     },
     {
-      header: 'TUỲ CHỌN',
-      accessorKey: 'actions',
-      size: 124,
-      cell: () => (
-        <button
-          type="button"
-          className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-          onClick={() => openModel(1)}
-        >
-          <MdOutlineMode size={18} />
-        </button>
+      header: 'QUYỀN',
+      accessorKey: 'role',
+      size: 80,
+      cell: (info) => {
+        const {
+          row: { original },
+          getValue
+        } = info
+        return (
+          <div className="flex gap-2 items-center">
+            <button
+              type="button"
+              className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 disabled:opacity-25"
+              onClick={() => onUpdate(original.id, 'employee')}
+              disabled={getValue() === 'employee'}
+            >
+              <IoIosPeople size={18} />
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 disabled:opacity-25"
+              onClick={() => onUpdate(original.id, 'admin')}
+              disabled={getValue() === 'admin'}
+            >
+              <MdAdminPanelSettings size={18} />
+            </button>
+          </div>
+        )
+      }
+    },
+    {
+      header: 'Xóa',
+      accessorKey: 'id',
+      size: 54,
+      cell: (info) => (
+        <div className="flex gap-2 items-center">
+          <button
+            type="button"
+            className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
+          >
+            <MdDelete size={16} onClick={() => onDelete(info.getValue())} />
+          </button>
+        </div>
       )
     }
   ]

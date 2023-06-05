@@ -92,7 +92,7 @@ const Table: React.FC<TableProps> = ({ data, columns, className, powerplus, cont
                   width: header.column.columnDef.size ? `${header.column.columnDef.size}px` : 'auto'
                 }}
                 colSpan={header.colSpan}
-                className={clsx('first:pl-6 last:pr-6 h-12 pl-1 sticky top-0 z-50 bg-gray-100 ', {
+                className={clsx('first:pl-6 last:pr-6 h-12 pl-1 sticky top-0 z-10 bg-gray-100 ', {
                   'text-center': (header.column.columnDef.meta as any)?.center
                 })}
               >
@@ -105,7 +105,7 @@ const Table: React.FC<TableProps> = ({ data, columns, className, powerplus, cont
       <tbody className="bg-white divide-y-[1px]">
         {table?.getRowModel().rows.map((row) => {
           return (
-            <tr key={row.id} className="hover:bg-gray-100 cursor-pointer">
+            <tr key={row.id + row.index} className="hover:bg-gray-100 cursor-pointer">
               {row.getVisibleCells().map((cell) => {
                 return (
                   <td

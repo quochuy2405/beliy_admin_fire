@@ -3,20 +3,21 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { FaMoneyBill, FaMoneyCheckAlt } from 'react-icons/fa'
+import { FaMoneyBill } from 'react-icons/fa'
 import { GiClothes } from 'react-icons/gi'
-import {
-  MdCategory,
-  MdInventory,
-  MdManageAccounts,
-  MdOutlineLocalActivity,
-  MdPersonSearch,
-  MdSupervisorAccount
-} from 'react-icons/md'
+import { MdCategory, MdInventory, MdManageAccounts, MdSupervisorAccount } from 'react-icons/md'
 
-import { RiBillFill } from 'react-icons/ri'
-import { HiHome } from 'react-icons/hi'
 import { LoadingPopUp } from '@/components/moleculers'
+import { findAll } from '@/firebase/base'
+import { auth, db } from '@/firebase/config'
+import { resetUser, setUser } from '@/redux/features/slices/user'
+import { RootState } from '@/redux/features/store'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { collection } from 'firebase/firestore'
+import { useEffect } from 'react'
+import { HiHome } from 'react-icons/hi'
+import { RiBillFill } from 'react-icons/ri'
+import { useDispatch, useSelector } from 'react-redux'
 const USERS = [
   {
     key: '/admin/stock',
@@ -59,46 +60,69 @@ const USERS = [
       <RiBillFill size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
     ),
     title: 'Quản lý đơn hàng'
-  },
-  {
-    key: '/admin/employee_managers',
-    icon: (active) => (
-      <MdPersonSearch size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
-    ),
-    title: 'Quản lý nhân viên'
   }
 ]
 
 const POCS = [
+  // {
+  //   key: '/admin/revenue',
+  //   icon: (active) => (
+  //     <FaMoneyCheckAlt size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+  //   ),
+  //   title: 'Thông kê sản phẩm bán chạy'
+  // },
   {
-    key: '/admin/revenue',
-    icon: (active) => (
-      <FaMoneyCheckAlt size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
-    ),
-    title: 'Thông kê sản phẩm bán chạy'
-  },
-  {
-    key: '/admin/expense_profit',
+    key: '/admin/expense',
     icon: (active) => (
       <FaMoneyBill size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
     ),
-    title: 'Thông kê chi phí - lợi nhuận'
-  },
-  {
-    key: '/admin/discount',
-    icon: (active) => (
-      <MdOutlineLocalActivity size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
-    ),
-    title: 'Quản lý ưu đãi, marketing'
+    title: 'Thông kê chi phí'
   }
+  // {
+  //   key: '/admin/discount',
+  //   icon: (active) => (
+  //     <MdOutlineLocalActivity size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
+  //   ),
+  //   title: 'Quản lý ưu đãi, marketing'
+  // }
 ]
 
 const AdminLayout = ({ children }) => {
   const { push } = useRouter()
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.user)
   const pathname = usePathname()
-  const handleLogout = async () => {
-    push('/')
+  const logout = async () => {
+    try {
+      await signOut(auth)
+      dispatch(resetUser())
+      push('/')
+      // You can perform additional actions after successful logout
+    } catch (error) {
+      console.error('Logout error:', error)
+      // Handle logout error
+    }
   }
+  useEffect(() => {
+    const autoLogin = () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const accountRef = collection(db, 'accounts')
+          await findAll?.(accountRef, [['email', user.email as any]])
+            .then((data) => {
+              const user = data[0] as any
+              if (user?.role) {
+                dispatch(setUser({ name: user.name, role: user.role }))
+              }
+            })
+            .catch()
+        } else {
+          push('/')
+        }
+      })
+    }
+    autoLogin()
+  }, [])
   return (
     <div className="flex flex-col h-screen bg-gray-50 overflow-hidden">
       {/* <!-- Desktop sidebar --> */}
@@ -135,39 +159,17 @@ const AdminLayout = ({ children }) => {
               ></button>
             </li>
             {/* <!-- Notifications menu --> */}
-            <li className="relative h-full flex items-center">
-              <button
-                className="relative align-middle rounded-md focus:outline-none 
-                m-auto focus:shadow-outline-purple"
-                aria-label="Notifications"
-                aria-haspopup="true"
-              >
-                <svg
-                  className="w-5 h-5 m-auto block"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
-                </svg>
-                {/* <!-- Notification badge --> */}
-                <span
-                  aria-hidden="true"
-                  className="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"
-                ></span>
-              </button>
-            </li>
+            <li className="relative h-full flex items-center"></li>
             {/* <!-- Profile menu --> */}
             <li className="relative h-full flex items-center">
               <button
                 className="align-middle rounded-full focus:shadow-outline-purple focus:outline-none"
                 aria-label="Account"
                 aria-haspopup="true"
-                onClick={handleLogout}
               >
                 <Image
-                  className="object-cover w-8 h-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+                  className="object-cover w-8 h-8 rounded-full border"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdwzfXRIJH3snkUU5puxDMum7wBrWSjgV25Jf3TN9ZS0GKmz072XvhBzJfJQQIkaxHdzo&usqp=CAU"
                   alt=""
                   unoptimized
                   width={32}
@@ -175,7 +177,14 @@ const AdminLayout = ({ children }) => {
                   aria-hidden="true"
                 />
               </button>
-              <span className="text-sm font-bold ml-3">Quốc Huy</span>
+              <span className="text-sm font-bold ml-3">{user?.name}</span>
+              <button
+                type="button"
+                onClick={() => logout()}
+                className="items-center h-8  px-4 ml-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-gray-500 hover:text-white"
+              >
+                Đăng xuất
+              </button>
             </li>
           </ul>
         </div>
@@ -214,19 +223,23 @@ const AdminLayout = ({ children }) => {
                 </li>
                 {USERS.map((item) => (
                   <li className="relative py" key={item.key}>
-                    <Link
-                      className={clsx(
-                        'flex items-center w-full text-sm font-medium transition-colors duration-150 hover:text-gray-800 p-2 rounded-md',
-                        {
-                          'bg-[#F2F2F2] text-black': pathname === item.key
-                        }
-                      )}
-                      href={item.key}
-                      passHref
-                    >
-                      {item.icon(pathname === item.key)}
-                      <span className="ml-2 hidden md:block">{item.title}</span>
-                    </Link>
+                    {user?.role === 'employee' && item.key === '/admin/account_managers' ? (
+                      <></>
+                    ) : (
+                      <Link
+                        className={clsx(
+                          'flex items-center w-full text-sm font-medium transition-colors duration-150 hover:text-gray-800 p-2 rounded-md',
+                          {
+                            'bg-[#F2F2F2] text-black': pathname === item.key
+                          }
+                        )}
+                        href={item.key}
+                        passHref
+                      >
+                        {item.icon(pathname === item.key)}
+                        <span className="ml-2 hidden md:block">{item.title}</span>
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

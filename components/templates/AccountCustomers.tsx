@@ -5,6 +5,7 @@ import { Controller, UseFormReturn } from 'react-hook-form'
 import { Table, TextField } from '../atoms'
 import { Modal } from '../moleculers'
 import { StateAccountCustomersType } from '@/pages/admin/account_customers'
+import { MdAddCircle } from 'react-icons/md'
 interface AccountCustomersProps {
   stateStore: UseFormReturn<StateAccountCustomersType, any>
   dataForm: UseFormReturn<AccountType, any>
@@ -14,6 +15,20 @@ interface AccountCustomersProps {
 const AccountCustomers = ({ columns, stateStore, dataForm, addAccount }: AccountCustomersProps) => {
   return (
     <div className="flex flex-col w-full h-full gap-2">
+      <div className="flex gap-4 bg-white rounded-lg overflow-hidden p-2">
+        <div className="bg-white flex-1 flex justify-end text-sm font-medium text-center text-gray-500">
+          <button
+            type="button"
+            className="w-fit inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+            onClick={() => stateStore.setValue('isModal', true)}
+          >
+            <label className="hidden md:block"> Tạo tài khoản</label>
+            <label className="block md:hidden">
+              <MdAddCircle size={20} />
+            </label>
+          </button>
+        </div>
+      </div>
       <Controller
         name="isModal"
         defaultValue={false}
@@ -61,16 +76,11 @@ const AccountCustomers = ({ columns, stateStore, dataForm, addAccount }: Account
                     )}
                   />
                   <Controller
-                    name="username"
+                    name="email"
                     defaultValue=""
                     control={dataForm.control}
                     render={({ field, fieldState }) => (
-                      <TextField
-                        title="Tên đăng nhập"
-                        {...field}
-                        errors={fieldState.error}
-                        required
-                      />
+                      <TextField title="Email" {...field} errors={fieldState.error} required />
                     )}
                   />
                   <Controller
@@ -79,19 +89,6 @@ const AccountCustomers = ({ columns, stateStore, dataForm, addAccount }: Account
                     control={dataForm.control}
                     render={({ field, fieldState }) => (
                       <TextField title="Mật khẩu" {...field} errors={fieldState.error} required />
-                    )}
-                  />
-                  <Controller
-                    name="username"
-                    defaultValue=""
-                    control={dataForm.control}
-                    render={({ field, fieldState }) => (
-                      <TextField
-                        title="Tên đăng nhập"
-                        {...field}
-                        errors={fieldState.error}
-                        required
-                      />
                     )}
                   />
                 </div>
