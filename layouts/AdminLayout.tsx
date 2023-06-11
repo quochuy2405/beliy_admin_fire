@@ -45,7 +45,7 @@ const USERS = [
     icon: (active) => (
       <MdManageAccounts size={20} color={active ? 'orange' : 'black'} className="w-5 h-5" />
     ),
-    title: 'Quản lý tài khoản'
+    title: 'Quản lý nhân viên'
   },
   {
     key: '/admin/account_customers',
