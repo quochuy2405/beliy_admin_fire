@@ -92,6 +92,43 @@ export const columnTableAccountManagers = ({
     }
   ]
 }
+export const columnTableAccountCustomerManagers = ({
+  onDelete
+}: ColumnTableAccountManagersProps): ColumnDef<any, any>[] => {
+  return [
+    {
+      header: 'ID',
+      accessorKey: 'id',
+      size: 120
+    },
+    {
+      header: 'EMAIL',
+      accessorKey: 'email',
+      size: 120
+    },
+    {
+      header: 'NGÀY TẠO',
+      accessorKey: 'createdAt',
+      size: 120,
+      cell: (info) => info?.getValue()?.toString()?.split('T')?.[0]
+    },
+    {
+      header: 'Xóa',
+      accessorKey: 'id',
+      size: 54,
+      cell: (info) => (
+        <div className="flex gap-2 items-center">
+          <button
+            type="button"
+            className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
+          >
+            <MdDelete size={16} onClick={() => onDelete(info.getValue())} />
+          </button>
+        </div>
+      )
+    }
+  ]
+}
 // addressNumber: string
 // award: string
 // checkoutId: string
@@ -106,9 +143,10 @@ export const columnTableInvoiceManagers = ({
 }: ColumnTableInvoiceManagersProps): ColumnDef<any, any>[] => {
   return [
     {
-      header: 'Mã đơn hàng',
-      accessorKey: 'checkoutId',
-      size: 80
+      header: 'NGÀY TẠO',
+      accessorKey: 'createdAt',
+      size: 120,
+      cell: (info) => info?.getValue()?.toString()?.split('T')?.[0]
     },
     {
       header: 'TÊN ĐẦY ĐỦ',
@@ -116,9 +154,10 @@ export const columnTableInvoiceManagers = ({
       size: 120
     },
     {
-      header: 'Địa chỉ',
+      header: 'ĐỊA CHỈ',
       accessorKey: 'address',
       size: 190,
+      minSize: 180,
       cell: ({ row: { original } }) => {
         const address = [
           original.addressNumber,
@@ -126,7 +165,7 @@ export const columnTableInvoiceManagers = ({
           original.district,
           original.province
         ]
-        return <p>{address.join(',')}</p>
+        return <p className="min-w-[200px]">{address.join(',')}</p>
       }
     },
     {
@@ -236,7 +275,7 @@ export const columnTableInvoiceManagers = ({
       }
     },
     {
-      header: ' ',
+      header: 'ĐÃ TRẢ',
       accessorKey: 'isCharge',
       size: 80,
       cell: (info) => {

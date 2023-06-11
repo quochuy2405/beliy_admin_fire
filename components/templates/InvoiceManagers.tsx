@@ -9,7 +9,7 @@ interface InvoiceManagersProps {
 }
 const InvoiceManagers: React.FC<InvoiceManagersProps> = ({ columns, stateStore }) => {
   return (
-    <div className="flex flex-col w-full h-full gap-2">
+    <div className="flex flex-col w-full h-full gap-2 ">
       <Controller
         name="datasets"
         control={stateStore.control}

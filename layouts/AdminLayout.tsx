@@ -127,7 +127,7 @@ const AdminLayout = ({ children }) => {
     <div className="flex flex-col h-screen bg-gray-50 overflow-hidden">
       {/* <!-- Desktop sidebar --> */}
       <LoadingPopUp />
-      <input id="hamburger" type="checkbox" className="hidden" defaultChecked />
+      <input id="hamburger" type="checkbox" className="hidden" />
       <header className="z-10 bg-white border-b-[1px] h-14 min-h-[56px] flex items-center justify-between px-6">
         <Link href="/admin" className="h-24 w-24 md:block hidden " passHref>
           <div className="bg-[url('/logo.png')] bg-cover bg-no-repeat w-full h-full" />
@@ -192,7 +192,7 @@ const AdminLayout = ({ children }) => {
       <div className="flex flex-1 w-full h-full relative">
         <aside
           id="bar-mobile"
-          className="z-20 h-full absolute top-0 w-fit flex-shrink-0 md:w-64 overflow-y-auto bg-white md:block shadow-lg md:relative md:!translate-x-0"
+          className="z-20 h-full absolute top-0 w-fit flex-shrink-0 md:w-64 overflow-y-auto bg-white md:block shadow-lg md:relative"
         >
           <div className="text-gray-500">
             <div className="p-4 w-full">
@@ -223,7 +223,7 @@ const AdminLayout = ({ children }) => {
                 </li>
                 {USERS.map((item) => (
                   <li className="relative py" key={item.key}>
-                    {user?.role === 'employee' && item.key === '/admin/account_managers' ? (
+                    {user?.role !== 'admin' && item.key === '/admin/account_managers' ? (
                       <></>
                     ) : (
                       <Link
@@ -268,7 +268,9 @@ const AdminLayout = ({ children }) => {
             </div>
           </div>
         </aside>
-        <main className="h-full flex-1 overflow-x-auto bg_admin p-6">{children}</main>
+        <main className="h-[100%] flex-1 overflow-hidden bg_admin flex flex-col items-center justify-center p-6">
+          <div className="overflow-x-auto w-full h-[92%] mb-auto">{children}</div>
+        </main>
       </div>
     </div>
   )
