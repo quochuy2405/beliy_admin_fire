@@ -71,6 +71,10 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ data }) => {
                 <span className="font-bold">Người thanh toán :</span>
                 <p> {data?.name}</p>
               </address>
+              <address className="text-sm">
+                <span className="font-bold">Số điện thoại :</span>
+                <p> {data?.phone}</p>
+              </address>
             </div>
             <div className="w-40">
               <address className="text-sm">
