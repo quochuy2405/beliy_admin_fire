@@ -1,4 +1,5 @@
 'use client'
+import { StateProductPageType } from '@/pages/admin/products'
 import { ProductType } from '@/types/product'
 import clsx from 'clsx'
 import { xor } from 'lodash'
@@ -9,7 +10,6 @@ import { Controller, UseFormReturn } from 'react-hook-form'
 import { MdAddCircle } from 'react-icons/md'
 import { Select, TextAreaField, TextField } from '../atoms'
 import { Modal } from '../moleculers'
-import { StateProductPageType } from '@/pages/admin/products'
 
 const sizes = ['S', 'M', 'L', 'XL', 'XXL', 'OV']
 
@@ -146,13 +146,13 @@ const Product: React.FC<ProductProps> = ({
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
-                      <button
+                      {/* <button
                         type="button"
                         className="flex-1 items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
                         onClick={() => stateStore.setValue('isDelete', item.id)}
                       >
                         Xóa
-                      </button>
+                      </button> */}
                       <button
                         type="button"
                         className="flex-1 items-center  py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"

@@ -6,7 +6,7 @@ import { collection } from 'firebase/firestore'
 import Link from 'next/link'
 import { FaEye } from 'react-icons/fa'
 import { IoIosPeople } from 'react-icons/io'
-import { MdAdminPanelSettings, MdDelete, MdPayment } from 'react-icons/md'
+import { MdAdminPanelSettings, MdPayment } from 'react-icons/md'
 import { TbTruckDelivery } from 'react-icons/tb'
 import Checkbox from '../atoms/Checkbox/Checkbox'
 interface ColumnTableAccountManagersProps {
@@ -15,7 +15,6 @@ interface ColumnTableAccountManagersProps {
   onDelete?: (id: string) => void
 }
 export const columnTableAccountManagers = ({
-  onDelete,
   onUpdate
 }: ColumnTableAccountManagersProps): ColumnDef<any, any>[] => {
   return [
@@ -74,27 +73,26 @@ export const columnTableAccountManagers = ({
           </div>
         )
       }
-    },
-    {
-      header: 'Xóa',
-      accessorKey: 'id',
-      size: 54,
-      cell: (info) => (
-        <div className="flex gap-2 items-center">
-          <button
-            type="button"
-            className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
-          >
-            <MdDelete size={16} onClick={() => onDelete(info.getValue())} />
-          </button>
-        </div>
-      )
     }
+    // {
+    //   header: 'Xóa',
+    //   accessorKey: 'id',
+    //   size: 54,
+    //   cell: (info) => (
+    //     <div className="flex gap-2 items-center">
+    //       <button
+    //         type="button"
+    //         className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
+    //       >
+    //         <MdDelete size={16} onClick={() => onDelete(info.getValue())} />
+    //       </button>
+    //     </div>
+    //   )
+    // }
   ]
 }
-export const columnTableAccountCustomerManagers = ({
-  onDelete
-}: ColumnTableAccountManagersProps): ColumnDef<any, any>[] => {
+export const columnTableAccountCustomerManagers = ({}: // onDelete
+ColumnTableAccountManagersProps): ColumnDef<any, any>[] => {
   return [
     {
       header: 'ID',
@@ -111,22 +109,22 @@ export const columnTableAccountCustomerManagers = ({
       accessorKey: 'createdAt',
       size: 120,
       cell: (info) => info?.getValue()?.toString()?.split('T')?.[0]
-    },
-    {
-      header: 'Xóa',
-      accessorKey: 'id',
-      size: 54,
-      cell: (info) => (
-        <div className="flex gap-2 items-center">
-          <button
-            type="button"
-            className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
-          >
-            <MdDelete size={16} onClick={() => onDelete(info.getValue())} />
-          </button>
-        </div>
-      )
     }
+    // {
+    //   header: 'Xóa',
+    //   accessorKey: 'id',
+    //   size: 54,
+    //   cell: (info) => (
+    //     <div className="flex gap-2 items-center">
+    //       <button
+    //         type="button"
+    //         className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
+    //       >
+    //         <MdDelete size={16} onClick={() => onDelete(info.getValue())} />
+    //       </button>
+    //     </div>
+    //   )
+    // }
   ]
 }
 // addressNumber: string
@@ -264,12 +262,12 @@ export const columnTableInvoiceManagers = ({
               </span>
             </Link>
 
-            <button
+            {/* <button
               type="button"
               className="inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-red-500 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-600"
             >
               <MdDelete size={16} />
-            </button>
+            </button> */}
           </div>
         )
       }
@@ -312,9 +310,8 @@ export const columnTableInvoiceManagers = ({
 interface ColumnTableCategoriesProps {
   deleteData: (id: string) => void
 }
-export const columnTableCategories = ({
-  deleteData
-}: ColumnTableCategoriesProps): ColumnDef<any, any>[] => {
+export const columnTableCategories = ({}: // deleteData
+ColumnTableCategoriesProps): ColumnDef<any, any>[] => {
   return [
     {
       header: 'Mã phân loại',
@@ -325,22 +322,22 @@ export const columnTableCategories = ({
       header: 'Tên phân loại',
       accessorKey: 'name',
       size: 120
-    },
-
-    {
-      header: 'Xóa',
-      accessorKey: 'delete',
-      size: 90,
-      cell: ({ row: { original } }) => (
-        <button
-          type="button"
-          onClick={() => deleteData(original?.id)}
-          className="flex-1 items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
-        >
-          Xóa
-        </button>
-      )
     }
+
+    // {
+    //   header: 'Xóa',
+    //   accessorKey: 'delete',
+    //   size: 90,
+    //   cell: ({ row: { original } }) => (
+    //     <button
+    //       type="button"
+    //       onClick={() => deleteData(original?.id)}
+    //       className="flex-1 items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
+    //     >
+    //       Xóa
+    //     </button>
+    //   )
+    // }
   ]
 }
 type ColumnTableEmployeeManagersProps = {
