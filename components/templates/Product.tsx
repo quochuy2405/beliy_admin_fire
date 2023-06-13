@@ -105,7 +105,7 @@ const Product: React.FC<ProductProps> = ({
                 {[...field.value].map((item) => (
                   <div
                     key={item?.imagesURL?.[0]}
-                    className="w-[90%] min-w-[270px] md:max-w-[280px] md:w-[33.333%] lg:w-[25%] bg-white rounded-lg flex flex-col p-4 gap-2 shadow-lg h-full flex-1"
+                    className="w-[90%] min-w-[280px] md:max-w-[290px] md:w-[33.333%] lg:w-[25%] bg-white rounded-lg flex flex-col p-4 gap-2 shadow-lg h-full flex-1"
                   >
                     <div className="w-full h-[240px] relative overflow-hidden">
                       <Image
@@ -118,10 +118,10 @@ const Product: React.FC<ProductProps> = ({
                       />
                     </div>
                     <div className="flex items-start justify-between flex-1">
-                      <p className="w-fit p-2 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
+                      <p className="w-fit p-1 h-fit rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
                         {item.name}
                       </p>
-                      <p className="w-fit p-2 h-7 rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
+                      <p className="w-fit p-1 h-full rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
                         Thể loại: {CATEGORIES[item.category]}
                       </p>
                     </div>
