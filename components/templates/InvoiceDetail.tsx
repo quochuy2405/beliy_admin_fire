@@ -1,13 +1,17 @@
 'use client'
 import LogoSvg from '@/assets/LogoSvg'
-import { OrderType } from '@/types/orders'
 import React, { useRef } from 'react'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { MdPlace, MdPrint } from 'react-icons/md'
 import ReactToPrint from 'react-to-print'
 
 interface InvoiceDetailProps {
-  data: OrderType
+  data: any
+}
+const PAYMENT_METHODS = {
+  payment_on_delivery: 'Thanh toán khi nhận hàng',
+  momo: ' Ví điện từ Momo',
+  banking: ' Chuyển khoản qua ngân hàng'
 }
 
 const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ data }) => {
@@ -51,22 +55,32 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ data }) => {
           <div className="flex justify-between p-4">
             <div>
               <h6 className="font-bold">
-                Ngày đặt hàng : <span className="text-sm font-medium">{data?.addressNumber}</span>
+                Ngày đặt hàng :{' '}
+                <span className="text-sm font-medium">{data?.createdAt?.split('T')[0]}</span>
               </h6>
               <h6 className="font-bold">
-                Mã đơn hàng : <span className="text-sm font-medium">{data?.phone}</span>
+                Mã đơn hàng : <span className="text-sm  font-semibold">{data?.checkoutId}</span>
+              </h6>
+              <h6 className="font-bold">
+                Phương thức :{' '}
+                <p className="text-sm  font-semibold">{PAYMENT_METHODS[data?.paymentMethods]}</p>
               </h6>
             </div>
             <div className="w-40">
               <address className="text-sm">
                 <span className="font-bold">Người thanh toán :</span>
-                Joe Smith, 795 Folsom Ave, San Francisco, CA 94107, P: (123) 456-7890
+                <p> {data?.name}</p>
               </address>
             </div>
             <div className="w-40">
               <address className="text-sm">
                 <span className="font-bold">Giao hàng tới :</span>
-                Joe Doe, 800 Folsom Ave, San Francisco, CA 94107, P: +111-456-7890
+                <p>
+                  {(data?.addressNumber || '') +
+                    [data?.award, data?.district, data?.province]
+                      .filter((item) => !!item)
+                      .join(', ')}
+                </p>
               </address>
             </div>
             <div />
@@ -85,20 +99,22 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ data }) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {/* Thêm hàng cho bảng */}
-                  <tr className="whitespace-nowrap">
-                    <td className="px-6 py-4 text-sm text-gray-500">1</td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">
-                        Amazon Brand - Symactive Men's Regular Fit T-Shirt
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-500">4</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">$20</td>
-                    <td className="px-6 py-4">$30</td>
-                  </tr>
+                  {data?.orders?.map((item) => (
+                    <tr className="whitespace-nowrap" key={item?.id}>
+                      <td className="px-6 py-4 text-sm text-gray-500">1</td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-900">{item?.name}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-500">{item?.quantityOrder}</div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{item?.sizes?.[0]}</td>
+                      <td className="px-6 py-4">
+                        {(Number(item?.price) * 1000).toLocaleString()} VND
+                      </td>
+                    </tr>
+                  ))}
+
                   {/* Thêm hàng cho bảng */}
                 </tbody>
               </table>

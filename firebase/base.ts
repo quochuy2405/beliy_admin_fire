@@ -86,7 +86,7 @@ const deleteItemByField = async (collectionName, fieldName, fieldValue) => {
 }
 // Read all documents in a collection
 const readAll = async (collectionRef) => {
-  const q = query(collectionRef, orderBy('createdAt', 'asc') as any)
+  const q = query(collectionRef, orderBy('createdAt', 'desc') as any)
   const querySnapshot = await getDocs(q)
   const documents = []
   querySnapshot.forEach((doc) => {

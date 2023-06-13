@@ -252,7 +252,7 @@ export const columnTableInvoiceManagers = ({
         } = info
         return (
           <div className="flex gap-2">
-            <Link href={`/admin/invoice_managers/${original.checkoutId}`}>
+            <Link href={`/admin/invoice_managers/${original.id}`}>
               <span
                 className={clsx(
                   'inline-flex items-center py-2 px-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800'
