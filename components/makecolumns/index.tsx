@@ -9,7 +9,7 @@ import { IoIosPeople } from 'react-icons/io'
 import { MdAdminPanelSettings, MdPayment } from 'react-icons/md'
 import { TbTruckDelivery } from 'react-icons/tb'
 import Checkbox from '../atoms/Checkbox/Checkbox'
-import { format } from 'date-fns'
+import { format, isValid } from 'date-fns'
 interface ColumnTableAccountManagersProps {
   openModel?: () => void
   onUpdate?: (id: string, role: string) => void
@@ -109,7 +109,7 @@ ColumnTableAccountManagersProps): ColumnDef<any, any>[] => {
       header: 'NGÀY TẠO',
       accessorKey: 'createdAt',
       size: 120,
-      cell: (info) => format(info.getValue(), 'dd/MM/yyyy HH:mm')
+      cell: (info) => isValid(info.getValue()) && format(info.getValue(), 'dd/MM/yyyy HH:mm')
     }
     // {
     //   header: 'Xóa',
@@ -145,7 +145,8 @@ export const columnTableInvoiceManagers = ({
       header: 'NGÀY TẠO',
       accessorKey: 'createdAt',
       size: 120,
-      cell: (info) => format(info.getValue(), 'dd/MM/yyyy HH:mm')
+
+      cell: (info) => isValid(info.getValue()) && format(info.getValue(), 'dd/MM/yyyy HH:mm')
     },
     {
       header: 'TÊN ĐẦY ĐỦ',

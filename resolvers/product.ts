@@ -12,12 +12,12 @@ export const schema = yup.object().shape({
     if (!value.length) return false
     return true
   }),
-  price: yup.number().test('quantity', 'Giá sản phẩm không hợp lệ', (value) => {
-    if (value <= 0) return false
+  price: yup.string().test('quantity', 'Giá sản phẩm không hợp lệ', (value) => {
+    if (Number(value) <= 0) return false
     return true
   }),
-  quantity: yup.number().test('quantity', 'Số lượng không hợp lệ', (value) => {
-    if (value <= 0) return false
+  quantity: yup.string().test('quantity', 'Số lượng không hợp lệ', (value) => {
+    if (Number(value) <= 0) return false
     return true
   }),
   descriptions: yup.string().required('Không được để trống'),
