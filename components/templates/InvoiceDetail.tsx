@@ -1,5 +1,6 @@
 'use client'
 import LogoSvg from '@/assets/LogoSvg'
+import { format, isValid } from 'date-fns'
 import React, { useRef } from 'react'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { MdPlace, MdPrint } from 'react-icons/md'
@@ -56,7 +57,9 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ data }) => {
             <div>
               <h6 className="font-bold">
                 Ngày đặt hàng :{' '}
-                <span className="text-sm font-medium">{data?.createdAt?.split('T')[0]}</span>
+                <span className="text-sm font-medium">
+                  {isValid(data?.createdAt) && format(data?.createdAt, 'dd/MM/yyyy HH:mm')}
+                </span>
               </h6>
               <h6 className="font-bold">
                 Mã đơn hàng : <span className="text-sm  font-semibold">{data?.checkoutId}</span>
