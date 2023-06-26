@@ -204,6 +204,7 @@ const ProductPage = () => {
   useEffect(() => {
     dataForm.reset()
     stateStore.resetField('fileImageNews')
+    stateStore.resetField('imagePreviews.0')
     stateStore.resetField('imagePreviews.1')
     stateStore.resetField('imagePreviews.2')
     stateStore.resetField('imagePreviews.3')
@@ -215,7 +216,7 @@ const ProductPage = () => {
     ;(tab === 'all' || !tab ? readAll(productRef) : findAll(productRef, [['category', tab]])).then(
       async (res) => {
         const products = res.map(async (item) => {
-          const names = [1, 2, 3, 4]
+          const names = [0, 1, 2, 3, 4]
           try {
           } catch (error) {}
           const imagesURL = names.map(async (name) => {
@@ -233,6 +234,7 @@ const ProductPage = () => {
                   name
               )
               const imageURL = await getDownloadURL(imageRef)
+              if (!imageURL) return
               return imageURL
             } catch (error) {
               return ''

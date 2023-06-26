@@ -117,7 +117,7 @@ const Product: React.FC<ProductProps> = ({
                         className="w-full max-h-[240px] object-contain md:object-cover"
                       />
                     </div>
-                    <div className="flex items-start justify-between flex-1">
+                    <div className="flex items-start justify-between flex-1 gap-2">
                       <p className="w-fit p-1 h-fit rounded-md border-2 border-black flex items-center text-black justify-center font-bold text-xs">
                         {item.name}
                       </p>
@@ -145,14 +145,14 @@ const Product: React.FC<ProductProps> = ({
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      {/* <button
+                    <div className="flex items-center gap-2">
+                      <button
                         type="button"
                         className="flex-1 items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-600 rounded-lg focus:ring-4 focus:ring-red-200 hover:bg-red-700"
                         onClick={() => stateStore.setValue('isDelete', item.id)}
                       >
                         Xóa
-                      </button> */}
+                      </button>
                       <button
                         type="button"
                         className="flex-1 items-center  py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
@@ -175,7 +175,7 @@ const Product: React.FC<ProductProps> = ({
                           })
 
                           item['imagesURL']?.map((url: string, index: number) => {
-                            stateStore.setValue(`imagePreviews.${index + 1}`, url)
+                            stateStore.setValue(`imagePreviews.${index}`, url)
                           })
 
                           stateStore.setValue('isModal', true)
@@ -203,6 +203,7 @@ const Product: React.FC<ProductProps> = ({
               field.onChange(false)
               dataForm.reset()
               stateStore.resetField('fileImageNews')
+              stateStore.resetField('imagePreviews.0')
               stateStore.resetField('imagePreviews.1')
               stateStore.resetField('imagePreviews.2')
               stateStore.resetField('imagePreviews.3')
@@ -219,7 +220,64 @@ const Product: React.FC<ProductProps> = ({
               <div className="flex flex-col md:flex-row">
                 <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4 p-4 !min-h-[300px] relative ">
                   <label
-                    htmlFor="dropzone-file-a"
+                    htmlFor="dropzone-file-0"
+                    className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 "
+                  >
+                    <Controller
+                      name="imagePreviews.0"
+                      control={stateStore.control}
+                      defaultValue={undefined}
+                      render={({ field }) => {
+                        return (
+                          <div>
+                            {field.value ? (
+                              <Image
+                                src={field.value || 'https://www.freeiconspng.com/img/23494'}
+                                unoptimized
+                                width={10}
+                                height={100}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="flex flex-col p-4 items-center justify-center">
+                                <svg
+                                  aria-hidden="true"
+                                  className="w-10 h-10 mb-3 text-gray-400"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                  />
+                                </svg>
+                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                  <span className="font-semibold">Ảnh nền</span>
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                                  SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      }}
+                    />
+
+                    <input
+                      id="dropzone-file-0"
+                      type="file"
+                      className="hidden"
+                      onChange={(event) => previewImageNew(event.target.files, '0')}
+                    />
+                  </label>
+                  <label
+                    htmlFor="dropzone-file-1"
                     className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 "
                   >
                     <Controller
@@ -256,7 +314,7 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span>
+                                  <span className="font-semibold">Ảnh dọc thứ nhất</span>
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
@@ -269,14 +327,14 @@ const Product: React.FC<ProductProps> = ({
                     />
 
                     <input
-                      id="dropzone-file-a"
+                      id="dropzone-file-1"
                       type="file"
                       className="hidden"
                       onChange={(event) => previewImageNew(event.target.files, '1')}
                     />
                   </label>
                   <label
-                    htmlFor="dropzone-file-b"
+                    htmlFor="dropzone-file-2"
                     className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 "
                   >
                     <Controller
@@ -313,7 +371,7 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span>
+                                  <span className="font-semibold">Ảnh dọc thứ 2</span>
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
@@ -326,7 +384,7 @@ const Product: React.FC<ProductProps> = ({
                     />
 
                     <input
-                      id="dropzone-file-b"
+                      id="dropzone-file-2"
                       type="file"
                       className="hidden"
                       onChange={(event) => previewImageNew(event.target.files, '2')}
@@ -370,7 +428,7 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span>
+                                  <span className="font-semibold">Ảnh ngang thứ nhất</span>
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
@@ -427,7 +485,7 @@ const Product: React.FC<ProductProps> = ({
                                   />
                                 </svg>
                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                  <span className="font-semibold">Click to upload</span>
+                                  <span className="font-semibold">Ảnh ngang thứ 2</span>
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                                   SVG, PNG, JPG or GIF (MAX. 800x400px)
