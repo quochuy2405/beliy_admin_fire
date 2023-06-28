@@ -100,6 +100,14 @@ const ProductPage = () => {
           imageName: data.imageName,
           prod_id: id
         })
+        dataForm.reset()
+        stateStore.resetField('fileImageNews')
+        stateStore.resetField('imagePreviews.0')
+        stateStore.resetField('imagePreviews.1')
+        stateStore.resetField('imagePreviews.2')
+        stateStore.resetField('imagePreviews.3')
+        stateStore.resetField('imagePreviews.4')
+        stateStore.resetField('isModal')
         setRefresh((cur) => !cur)
       })
       .catch((error) => {
@@ -122,7 +130,6 @@ const ProductPage = () => {
       imageName,
       gender
     } = data
-
     const productRef = collection(db, 'products')
     update(productRef, id, {
       category,
