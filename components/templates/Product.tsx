@@ -656,6 +656,10 @@ const Product: React.FC<ProductProps> = ({
                                 value: 'men'
                               },
                               {
+                                label: 'Bộ phối',
+                                value: 'ourmix'
+                              },
+                              {
                                 label: 'Cả 2',
                                 value: 'all'
                               }
